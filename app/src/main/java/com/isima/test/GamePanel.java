@@ -64,7 +64,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
                 thread.setRunning(false) ; /* Arrete le jeu */
                 thread.join() ; /* Arrete le thread et le detruit */
 
-            } catch (Exception e) {e.printStackTrace();}  /* Retourne sur la sortie d'erreur standard, la trace (log) des exception */
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }  /* Retourne sur la sortie d'erreur standard, la trace (log) des exception */
             retry = false ;
         }
 

@@ -62,7 +62,11 @@ public class MainThread extends Thread {
                     {
                         /* Arrete l'edition du canvas et l'affiche a l'ecran */
                         surfaceHolder.unlockCanvasAndPost(canvas) ;
-                    } catch (Exception e) { e.printStackTrace();}
+                    }
+                    catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
 
                 }
             }
