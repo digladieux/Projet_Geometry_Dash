@@ -29,10 +29,10 @@ public class GamePlayScene implements Scene {
 
         /* on aurait pus appelle reset ici */
         /* On fait apparait le rectangle au mileu 3/4 en bas */
-        playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4) ;
+        playerPoint = new Point(Constants.PLAYER_GAP + 100, 3*Constants.SCREEN_HEIGHT/4) ;
         /* afficher le rectangle autour du point */
         player.update(playerPoint) ;
-        obstacleManager = new ObstacleManager(200, 350, 75, Color.BLACK) ;
+        obstacleManager = new ObstacleManager(Constants.PLAYER_GAP, 350, 75, Color.BLACK) ;
 
         orientationData = new OrientationData() ;
         orientationData.register();
@@ -43,7 +43,7 @@ public class GamePlayScene implements Scene {
         playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4) ;
         /* afficher le rectangle autour du point */
         player.update(playerPoint) ;
-        obstacleManager = new ObstacleManager(200, 350, 75, Color.BLACK) ;
+        obstacleManager = new ObstacleManager(Constants.PLAYER_GAP, 350, 75, Color.BLACK) ;
         movingPlayer = false ;
 
     }

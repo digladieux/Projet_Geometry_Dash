@@ -50,15 +50,23 @@ public class ObstacleManager {
     private void populateObstacles()
     {
         /* Todo : currY La zone de jeu sera de 4/5 de l'écran pour avoir de la marche */
-        int currY = - 5 * Constants.SCREEN_HEIGHT/4 ;
+    //    int currY = - 5 * Constants.SCREEN_HEIGHT/4 ;
+//
+  //      /*Todo : pk < 0*/
+    //    while (currY < 0)
+      //  {
+        //    /* Nombre aléatoire entre 0 et 1 */
+          //  obstacles.add(new Obstacle(obstacleHeight, color, currY, playerGap)) ;
+            //currY += obstacleHeight + obstacleGap ;
+       // }
+        int currY = Constants.SCREEN_WIDTH ;
 
-        /*Todo : pk < 0*/
-        while (currY < 0)
+              /*Todo : pk < 0*/
+        while (currY > 0)
         {
             /* Nombre aléatoire entre 0 et 1 */
-            int xStart = (int) (Math.random() * (Constants.SCREEN_WIDTH - playerGap));
-            obstacles.add(new Obstacle(obstacleHeight, color, xStart, currY, playerGap)) ;
-            currY += obstacleHeight + obstacleGap ;
+            obstacles.add(new Obstacle(obstacleHeight, color, currY, playerGap)) ;
+            currY -= obstacleHeight + obstacleGap ;
         }
     }
 
@@ -76,10 +84,18 @@ public class ObstacleManager {
         {
             ob.incrementY(speed * elapsedTime);
         }
-        if(obstacles.get(obstacles.size() -1 ).getRectangle().top >= Constants.SCREEN_HEIGHT)
+     /*   if(obstacles.get(obstacles.size() -1 ).getRectangle().right >= Constants.SCREEN_WIDTH)
         {
-            int xStart = (int) (Math.random() * (Constants.SCREEN_WIDTH - playerGap));
-            obstacles.add(0, new Obstacle(obstacleHeight,color, xStart, obstacles.get(0).getRectangle().top - obstacleHeight - obstacleGap, playerGap )) ;
+            obstacles.add(0, new Obstacle(obstacleHeight,color, obstacles.get(0).getRectangle().right - obstacleHeight - obstacleGap, playerGap )) ;
+            obstacles.remove(obstacles.size()-1) ;
+            score ++ ;
+        }
+        */
+        if(obstacles.get(obstacles.size() -1 ).getRectangle().left <= 0)
+        {
+           /* obstacles.add(0, new Obstacle(obstacleHeight,color, obstacles.get(0).getRectangle().right - obstacleHeight - obstacleGap, playerGap )) ;
+            obstacles.remove(obstacles.size()-1) ;*/
+            obstacles.add(0, new Obstacle(obstacleHeight,color, Constants.SCREEN_WIDTH, playerGap)) ;
             obstacles.remove(obstacles.size()-1) ;
             score ++ ;
         }

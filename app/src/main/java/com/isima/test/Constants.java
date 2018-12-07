@@ -9,4 +9,5 @@ public class Constants
 
     public static Context CURRENT_CONTEXT ;
     public static long INIT_TIME ;
+    public static int PLAYER_GAP;
 }
