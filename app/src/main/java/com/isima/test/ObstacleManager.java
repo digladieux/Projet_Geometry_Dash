@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 
 import java.util.ArrayList;
-/* TODO : Comprendre obstacle Gap */
 public class ObstacleManager {
     private ArrayList<Obstacle> obstacles ;
 
@@ -13,7 +12,6 @@ public class ObstacleManager {
     private int playerGap ;
 
     /* Espace entre les obstacles */
-    private int obstacleGap ;
     private int obstacleHeight ;
     private int color ;
     private long startTime ; /* debut frame */
@@ -22,10 +20,9 @@ public class ObstacleManager {
 
     private int score = 0 ;
 
-    public ObstacleManager(int playerGap, int obstacleGap, int obstacleHeight, int color)
+    ObstacleManager(int playerGap, int obstacleHeight, int color)
     {
         this.playerGap = playerGap ;
-        this.obstacleGap = obstacleGap ;
         this.obstacleHeight = obstacleHeight ;
         this.color = color ;
 
@@ -33,10 +30,10 @@ public class ObstacleManager {
 
         obstacles = new ArrayList<>() ;
 
-        populateObstacles() ;
+        obstacles.add(new Obstacle(obstacleHeight, color, Constants.SCREEN_WIDTH, playerGap)) ;
     }
 
-    public boolean playerCollide(RectPlayer player)
+    boolean playerCollide(RectPlayer player)
     {
         for (Obstacle ob : obstacles) /* On regarde pour tous les obstacles si il y a une colision */
         {
@@ -46,28 +43,6 @@ public class ObstacleManager {
             }
         }
         return false ;
-    }
-    private void populateObstacles()
-    {
-        /* Todo : currY La zone de jeu sera de 4/5 de l'écran pour avoir de la marche */
-    //    int currY = - 5 * Constants.SCREEN_HEIGHT/4 ;
-//
-  //      /*Todo : pk < 0*/
-    //    while (currY < 0)
-      //  {
-        //    /* Nombre aléatoire entre 0 et 1 */
-          //  obstacles.add(new Obstacle(obstacleHeight, color, currY, playerGap)) ;
-            //currY += obstacleHeight + obstacleGap ;
-       // }
-        int currY = Constants.SCREEN_WIDTH ;
-
-              /*Todo : pk < 0*/
-        while (currY > 0)
-        {
-            /* Nombre aléatoire entre 0 et 1 */
-            obstacles.add(new Obstacle(obstacleHeight, color, currY, playerGap)) ;
-            currY -= obstacleHeight + obstacleGap ;
-        }
     }
 
     public void update()
@@ -83,22 +58,18 @@ public class ObstacleManager {
         for(Obstacle ob : obstacles)
         {
             ob.incrementY(speed * elapsedTime);
+            ob.update();
         }
-     /*   if(obstacles.get(obstacles.size() -1 ).getRectangle().right >= Constants.SCREEN_WIDTH)
-        {
-            obstacles.add(0, new Obstacle(obstacleHeight,color, obstacles.get(0).getRectangle().right - obstacleHeight - obstacleGap, playerGap )) ;
-            obstacles.remove(obstacles.size()-1) ;
-            score ++ ;
-        }
-        */
         if(obstacles.get(obstacles.size() -1 ).getRectangle().left <= 0)
         {
-           /* obstacles.add(0, new Obstacle(obstacleHeight,color, obstacles.get(0).getRectangle().right - obstacleHeight - obstacleGap, playerGap )) ;
-            obstacles.remove(obstacles.size()-1) ;*/
             obstacles.add(0, new Obstacle(obstacleHeight,color, Constants.SCREEN_WIDTH, playerGap)) ;
             obstacles.remove(obstacles.size()-1) ;
             score ++ ;
         }
+        /*else if (obstacles.get(obstacles.size() -1 ).getRectangle().right < obstacleGap)
+        {
+            obstacles.add(new Obstacle(obstacleHeight, color, Constants.SCREEN_WIDTH, playerGap)) ;
+        }*/
     }
 
     public void draw(Canvas canvas)

@@ -2,12 +2,14 @@ package com.isima.test;
 
 import android.content.Context;
 
-public class Constants
+class Constants
 {
-    public static int SCREEN_WIDTH ;
-    public static int SCREEN_HEIGHT ;
+    static int SCREEN_WIDTH ;
+    static int SCREEN_HEIGHT ;
 
-    public static Context CURRENT_CONTEXT ;
-    public static long INIT_TIME ;
-    public static int PLAYER_GAP;
+    static Context CURRENT_CONTEXT ;
+    static long INIT_TIME ;
+    static int PLAYER_GAP = 50;
+    static int HEIGH_GROUND = 100 ;
+    static int JUMP_TIME = 2000 ;
 }

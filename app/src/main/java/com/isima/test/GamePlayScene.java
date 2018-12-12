@@ -12,6 +12,7 @@ public class GamePlayScene implements Scene {
     /* Zone pour l'affichage de l'erreur */
     private Rect r = new Rect() ;
     private RectPlayer player ;
+    private Rect ground ;
 
     /* Centre du rectangle du joueur */
     private Point playerPoint ;
@@ -20,71 +21,60 @@ public class GamePlayScene implements Scene {
     private boolean movingPlayer = false ;
     private boolean gameOver = false ;
     private long gameOverTime ;
+    private long jumpStart ;
 
     private OrientationData orientationData ;
     private long frameTime ; /* vitesse du bonhomme */
-    public GamePlayScene()
+    GamePlayScene()
     {
-        player = new RectPlayer(new Rect(100,100,200,200), Color.rgb(255,0,0)) ;
+        player = new RectPlayer(new Rect(100,100,200,200)) ;
 
         /* on aurait pus appelle reset ici */
         /* On fait apparait le rectangle au mileu 3/4 en bas */
-        playerPoint = new Point(Constants.PLAYER_GAP + 100, 3*Constants.SCREEN_HEIGHT/4) ;
+        playerPoint = new Point(Constants.PLAYER_GAP + 100, Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - 80) ;
         /* afficher le rectangle autour du point */
         player.update(playerPoint) ;
-        obstacleManager = new ObstacleManager(Constants.PLAYER_GAP, 350, 75, Color.BLACK) ;
+        obstacleManager = new ObstacleManager(Constants.PLAYER_GAP, 75, Color.BLACK) ;
 
         orientationData = new OrientationData() ;
         orientationData.register();
         frameTime = System.currentTimeMillis() ;
-
+        ground = new Rect(0, Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT) ;
     }
     private void reset() {
-        playerPoint = new Point(Constants.SCREEN_WIDTH/2, 3*Constants.SCREEN_HEIGHT/4) ;
+        playerPoint = new Point(Constants.PLAYER_GAP + 100, Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - 80) ;
         /* afficher le rectangle autour du point */
         player.update(playerPoint) ;
-        obstacleManager = new ObstacleManager(Constants.PLAYER_GAP, 350, 75, Color.BLACK) ;
+        obstacleManager = new ObstacleManager(Constants.PLAYER_GAP, 75, Color.BLACK) ;
         movingPlayer = false ;
 
     }
     @Override
     public void update() {
-        if (!gameOver)
-        {
-            if (frameTime < Constants.INIT_TIME)
-            {
-                frameTime = Constants.INIT_TIME ;
+        if (!gameOver) {
+            if (frameTime < Constants.INIT_TIME) {
+                frameTime = Constants.INIT_TIME;
             }
-            int elapsedTime = (int)( System.currentTimeMillis() - frameTime) ; /* temps qu'il reste avant une autre frame */
-            frameTime = System.currentTimeMillis() ;
-            if (orientationData.getOrientation() != null && orientationData.getStartOrientation() != null)
+            frameTime = System.currentTimeMillis();
+            if (movingPlayer)
             {
-                float pitch = orientationData.getOrientation()[1] - orientationData.getStartOrientation()[1]; /*x*/
-                float roll = orientationData.getOrientation()[2] - orientationData.getStartOrientation()[2]; /*y*/
+                /* a opti */
+                if (System.currentTimeMillis() - jumpStart < Constants.JUMP_TIME / 2) {
+                    if (playerPoint.y > Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - 400)
+                    {
+                        playerPoint.y -= 2/25 * (System.currentTimeMillis() - jumpStart) +20;
+                    }
+                } else if (System.currentTimeMillis() - jumpStart < Constants.JUMP_TIME) {
+                    if (playerPoint.y < Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - 80)
+                    {
+                        playerPoint.y += 3/25 * ((System.currentTimeMillis() - jumpStart)/2) +20 ;
+                    }
+                } else {
+                    movingPlayer = false;
+                    playerPoint.y = Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - 80 ;
+                }
+            }
 
-                float xSpeed = 2 * roll * Constants.SCREEN_WIDTH/1000f ;/* vitesse du bonhomme */
-                float ySpeed = pitch * Constants.SCREEN_HEIGHT/1000f ; /* il peut parcourir l'ecran en 1 s */
-
-                playerPoint.x += Math.abs(xSpeed * elapsedTime) > 5 ? xSpeed * elapsedTime : 0 ;
-                playerPoint.y -= Math.abs(ySpeed * elapsedTime) > 5 ? ySpeed * elapsedTime : 0 ;
-            }
-
-            if(playerPoint.x < 0)
-            {
-                playerPoint.x = 0 ;
-            }
-            else if (playerPoint.x > Constants.SCREEN_WIDTH)
-            {
-                playerPoint.x = Constants.SCREEN_WIDTH ;
-            }
-            if(playerPoint.y < 0)
-            {
-                playerPoint.y = 0 ;
-            }
-            else if (playerPoint.y > Constants.SCREEN_HEIGHT)
-            {
-                playerPoint.y = Constants.SCREEN_HEIGHT ;
-            }
             player.update(playerPoint);
             obstacleManager.update();
 
@@ -103,6 +93,9 @@ public class GamePlayScene implements Scene {
         /*Dessine sur le canvas le rectangle */
         player.draw(canvas);
         obstacleManager.draw(canvas);
+        Paint ground_paint = new Paint() ;
+        ground_paint.setColor(Color.BLUE);
+        canvas.drawRect(ground,ground_paint);
         if (gameOver)
         {
             Paint paint = new Paint() ;
@@ -118,16 +111,16 @@ public class GamePlayScene implements Scene {
     }
 
     @Override
+
     public void recieveTouch(MotionEvent event) {
         /* getAction : bouton relache ? appuye ? bouge */
-        switch (event.getAction())
+        if (event.getAction() == MotionEvent.ACTION_DOWN)
         {
-
-            case MotionEvent.ACTION_DOWN :
                 /* Si le joueur n'a pas perdu et appuie dans le rectangle */
-                if (!gameOver && player.getRectangle().contains((int)event.getX(), (int)event.getY()))
+                if ( (!gameOver) && (!movingPlayer) )
                 {
                     movingPlayer = true ;
+                    jumpStart = System.currentTimeMillis() ;
                 }
                 /* On veut que l'ecran de game over reste 2 sec a l'écran */
                 if (gameOver && System.currentTimeMillis() - gameOverTime >= 2000)
@@ -136,17 +129,6 @@ public class GamePlayScene implements Scene {
                     gameOver = false ;
                     orientationData.newGame();
                 }
-                break ;
-            case MotionEvent.ACTION_MOVE :
-                /* Si on a le droit de bouger */
-                if (!gameOver && movingPlayer) {
-                    /* retourne les coordoonnées où on appuie et les affecte au point*/
-                    playerPoint.set((int) event.getX(), (int) event.getY());
-                }
-                break ;
-            case MotionEvent.ACTION_UP :
-                movingPlayer = false ;
-                break ;
         }
     }
 
