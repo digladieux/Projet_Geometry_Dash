@@ -1,12 +1,10 @@
 package com.isima.test;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 public class MainActivity extends Activity {
 

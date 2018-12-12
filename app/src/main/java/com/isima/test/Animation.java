@@ -12,10 +12,6 @@ public class Animation {
 
     private boolean isPLaying = false ;
 
-    public boolean isPLaying()
-    {
-        return isPLaying;
-    }
 
     public void play()
     {
@@ -27,7 +23,7 @@ public class Animation {
     public void stop()
     {
         isPLaying = false ;
-    }
+    } /* pour plus tard */
 
     private float frameTime ; /* temps entre les frame */
 

@@ -23,7 +23,6 @@ public class GamePlayScene implements Scene {
     private long gameOverTime ;
     private long jumpStart ;
 
-    private OrientationData orientationData ;
     private long frameTime ; /* vitesse du bonhomme */
     GamePlayScene()
     {
@@ -34,10 +33,8 @@ public class GamePlayScene implements Scene {
         playerPoint = new Point(PlayerConstants.PLAYER_GAP, PlayerConstants.INIT_POSITION_Y); /* a cause de l'image il faut regle */
         /* afficher le rectangle autour du point */
         player.update(playerPoint) ;
-        obstacleManager = new ObstacleManager(Color.BLACK);
+        obstacleManager = new ObstacleManager();
 
-        orientationData = new OrientationData() ;
-        orientationData.register();
         frameTime = System.currentTimeMillis() ;
         ground = new Rect(0, Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT) ;
     }
@@ -45,7 +42,7 @@ public class GamePlayScene implements Scene {
         playerPoint = new Point(PlayerConstants.PLAYER_GAP, PlayerConstants.INIT_POSITION_Y);
         /* afficher le rectangle autour du point */
         player.update(playerPoint) ;
-        obstacleManager = new ObstacleManager(Color.BLACK);
+        obstacleManager = new ObstacleManager();
         movingPlayer = false ;
 
     }
@@ -127,7 +124,6 @@ public class GamePlayScene implements Scene {
                 {
                     reset() ;
                     gameOver = false ;
-                    orientationData.newGame();
                 }
         }
     }

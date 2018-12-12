@@ -4,8 +4,7 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 public class MainThread extends Thread {
-    public static final int MAX_FPS = 30 ;  /* final = const en c++ */
-    private double averageFPS ; /* Moyenne fps */
+    private static final int MAX_FPS = 30;  /* final = const en c++ */
     private SurfaceHolder surfaceHolder ; /* Zone de la fenetre */
     private GamePanel gamePanel ; /* Zone du jeu */
     private boolean running ; /* Le thread tourne t'il */
@@ -29,7 +28,7 @@ public class MainThread extends Thread {
     {
         /* long = Gros int */
         long startTime ; /* Debut d'une frame */
-        long timeMillis = 1000/MAX_FPS ; /* Fin frame (creer + afficher) */
+        long timeMillis; /* Fin frame (creer + afficher) */
         long waitTime ; /* Combien de temps on doit attendre avant de relancer le prochain frame */
         int frameCount = 0 ;
         long totalTime = 0 ; /* Temps d'allumage de l'appli */
@@ -77,7 +76,7 @@ public class MainThread extends Thread {
                 if (waitTime > 0)
                 {
                     /* On endort le thread de x ms */
-                    this.sleep(waitTime) ;
+                    MainThread.sleep(waitTime);
                 }
             }catch (Exception e) {e.printStackTrace();}
 
@@ -85,7 +84,8 @@ public class MainThread extends Thread {
             frameCount ++ ;
             if (frameCount == MAX_FPS)
             {
-                averageFPS = 1000 / ( (totalTime/frameCount) /1000000) ; /* en sec */
+                /* Moyenne fps */
+                double averageFPS = 1000 / ((totalTime / frameCount) / 1000000);
                 frameCount = 0 ;
                 totalTime = 0 ;
                 System.out.println(averageFPS) ;
