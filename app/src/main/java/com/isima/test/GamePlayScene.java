@@ -27,14 +27,14 @@ public class GamePlayScene implements Scene {
     private long frameTime ; /* vitesse du bonhomme */
     GamePlayScene()
     {
-        player = new RectPlayer(new Rect(100,100,200,200)) ;
+        player = new RectPlayer(new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER));
 
         /* on aurait pus appelle reset ici */
         /* On fait apparait le rectangle au mileu 3/4 en bas */
-        playerPoint = new Point(Constants.PLAYER_GAP + 100, Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - 80) ;
+        playerPoint = new Point(PlayerConstants.PLAYER_GAP, PlayerConstants.INIT_POSITION_Y); /* a cause de l'image il faut regle */
         /* afficher le rectangle autour du point */
         player.update(playerPoint) ;
-        obstacleManager = new ObstacleManager(Constants.PLAYER_GAP, 75, Color.BLACK) ;
+        obstacleManager = new ObstacleManager(Color.BLACK);
 
         orientationData = new OrientationData() ;
         orientationData.register();
@@ -42,10 +42,10 @@ public class GamePlayScene implements Scene {
         ground = new Rect(0, Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT) ;
     }
     private void reset() {
-        playerPoint = new Point(Constants.PLAYER_GAP + 100, Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - 80) ;
+        playerPoint = new Point(PlayerConstants.PLAYER_GAP, PlayerConstants.INIT_POSITION_Y);
         /* afficher le rectangle autour du point */
         player.update(playerPoint) ;
-        obstacleManager = new ObstacleManager(Constants.PLAYER_GAP, 75, Color.BLACK) ;
+        obstacleManager = new ObstacleManager(Color.BLACK);
         movingPlayer = false ;
 
     }
@@ -59,19 +59,19 @@ public class GamePlayScene implements Scene {
             if (movingPlayer)
             {
                 /* a opti */
-                if (System.currentTimeMillis() - jumpStart < Constants.JUMP_TIME / 2) {
-                    if (playerPoint.y > Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - 400)
+                if (System.currentTimeMillis() - jumpStart < PlayerConstants.JUMP_TIME / 2) {
+                    if (playerPoint.y > Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - PlayerConstants.HEIGHT_JUMP)
                     {
                         playerPoint.y -= 2/25 * (System.currentTimeMillis() - jumpStart) +20;
                     }
-                } else if (System.currentTimeMillis() - jumpStart < Constants.JUMP_TIME) {
-                    if (playerPoint.y < Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - 80)
+                } else if (System.currentTimeMillis() - jumpStart < PlayerConstants.JUMP_TIME) {
+                    if (playerPoint.y < PlayerConstants.INIT_POSITION_Y)
                     {
                         playerPoint.y += 3/25 * ((System.currentTimeMillis() - jumpStart)/2) +20 ;
                     }
                 } else {
                     movingPlayer = false;
-                    playerPoint.y = Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - 80 ;
+                    playerPoint.y = PlayerConstants.INIT_POSITION_Y;
                 }
             }
 
@@ -101,7 +101,7 @@ public class GamePlayScene implements Scene {
             Paint paint = new Paint() ;
             paint.setTextSize(100);
             paint.setColor(Color.MAGENTA);
-            drawCenterText(canvas, paint, "Game Over");
+            drawCenterText(canvas, paint);
         }
     }
 
@@ -132,7 +132,8 @@ public class GamePlayScene implements Scene {
         }
     }
 
-    private void drawCenterText(Canvas canvas, Paint paint, String text) {
+    private void drawCenterText(Canvas canvas, Paint paint) {
+        String text = "GameOver !";
         paint.setTextAlign(Paint.Align.LEFT);
         canvas.getClipBounds(r);
         int cHeight = r.height();

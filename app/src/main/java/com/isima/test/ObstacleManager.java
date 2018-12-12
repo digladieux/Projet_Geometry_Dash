@@ -12,7 +12,6 @@ public class ObstacleManager {
     private int playerGap ;
 
     /* Espace entre les obstacles */
-    private int obstacleHeight ;
     private int color ;
     private long startTime ; /* debut frame */
 
@@ -20,17 +19,15 @@ public class ObstacleManager {
 
     private int score = 0 ;
 
-    ObstacleManager(int playerGap, int obstacleHeight, int color)
+    ObstacleManager(int color)
     {
-        this.playerGap = playerGap ;
-        this.obstacleHeight = obstacleHeight ;
         this.color = color ;
 
         startTime = initTime = System.currentTimeMillis() ;
 
         obstacles = new ArrayList<>() ;
 
-        obstacles.add(new Obstacle(obstacleHeight, color, Constants.SCREEN_WIDTH, playerGap)) ;
+        obstacles.add(new Obstacle(color));
     }
 
     boolean playerCollide(RectPlayer player)
@@ -62,7 +59,7 @@ public class ObstacleManager {
         }
         if(obstacles.get(obstacles.size() -1 ).getRectangle().left <= 0)
         {
-            obstacles.add(0, new Obstacle(obstacleHeight,color, Constants.SCREEN_WIDTH, playerGap)) ;
+            obstacles.add(0, new Obstacle(color));
             obstacles.remove(obstacles.size()-1) ;
             score ++ ;
         }

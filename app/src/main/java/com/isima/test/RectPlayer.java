@@ -37,13 +37,6 @@ public class RectPlayer implements GameObject {
 
     @Override
     public void draw(Canvas canvas) {
-        /* Partie graphique de notre rectangle, comment on va le colorier, representer */
-
-        /* Le rectangle est un carre rouge */
-        /*Paint paint = new Paint() ;
-        paint.setColor(color);
-        canvas.drawRect(rectangle, paint);*/
-
         animManager.draw(canvas, rectangle);
     }
 
@@ -61,8 +54,6 @@ public class RectPlayer implements GameObject {
         /* left, top, right, bottom */
         /* Le point est le centre du rectangle */
         rectangle.set(point.x - rectangle.width()/2, point.y - rectangle.height()/2,point.x + rectangle.width()/2, point.y + rectangle.height()/2);
-
-        /* si saut 2, si avance 1 */
         animManager.update();
     }
 }
