@@ -25,38 +25,29 @@ public class ObstacleManager {
         startTime = initTime = System.currentTimeMillis() ;
 
         obstacles = new ArrayList<>() ;
-
-        obstacles.add(initialisationGroundObstacle());
-        obstacles.add(initialisationAerianObstacle());
+        obstacles.add(initialisationGroundObstacle(ObstaclesGroundConstants.OBSTACLE_LEFT, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
+        //obstacles.add(initialisationGroundObstacle(Constants.SCREEN_WIDTH/2 + ObstaclesGroundConstants.OBSTACLE_WIDTH, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT/2, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
+        //obstacles.add(initialisationAerianObstacle(ObstaclesAerianConstants.OBSTACLE_LEFT, ObstaclesAerianConstants.OBSTACLE_TOP, ObstaclesAerianConstants.OBSTACLE_RIGHT, ObstaclesAerianConstants.OBSTACLE_BOTTOM));
     }
 
-    private Obstacles initialisationGroundObstacle() {
+    private Obstacles initialisationGroundObstacle(int area_left, int area_top, int area_right, int area_bottom) {
         Bitmap movement_left = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.snake_slime);
         Bitmap movement_right = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.snake_slime_ani);
-        return new GroundObstacle(movement_left, movement_right);
+        return new GroundObstacle(movement_left, movement_right, area_left, area_top, area_right, area_bottom);
     }
 
-    private Obstacles initialisationAerianObstacle() {
+    private Obstacles initialisationAerianObstacle(int area_left, int area_top, int area_right, int area_bottom) {
         Bitmap movement_left = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.bat);
         Bitmap movement_right = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.bat_fly);
-        return new GroundObstacle(movement_left, movement_right);
+        return new AerianObstacle(movement_left, movement_right, area_left, area_top, area_right, area_bottom);
     }
 
     boolean playerCollide(RectPlayer player)
     {
         boolean collision = false;
-        for (Obstacles ob : obstacles) /* On regarde pour tous les obstacles si il y a une colision */ {
-            switch (ob.getTypeObstacle()) {
-                case GROUND:
-                    if (ob.GroundObstacle.playerCollide(player)) {
-                        collision = true;
-                    }
-                    break;
-                case AERIAN:
-                    if (ob.AerianObstacle.playerCollide(player)) {
-                        collision = true;
-                    }
-                    break;
+        for (Obstacles ob : obstacles) {
+            if (ob.playerCollide(player)) {
+                collision = true;
             }
         }
         return collision;
@@ -79,7 +70,7 @@ public class ObstacleManager {
         }
         if(obstacles.get(obstacles.size() -1 ).getRectangle().left <= 0)
         {
-            obstacles.add(0, initialisationGroundObstacle());
+            obstacles.add(0, initialisationGroundObstacle(ObstaclesGroundConstants.OBSTACLE_LEFT, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
             obstacles.remove(obstacles.size()-1) ;
             score ++ ;
         }

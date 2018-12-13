@@ -27,7 +27,7 @@ class PlayerConstants {
 class ObstaclesGroundConstants {
 
     private static int OBSTACLE_HEIGHT = 100;
-    private static int OBSTACLE_WIDTH = 75;
+    static int OBSTACLE_WIDTH = 75;
     static int OBSTACLE_RIGHT = Constants.SCREEN_WIDTH;
     static int OBSTACLE_BOTTOM = Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND;
     static int OBSTACLE_TOP = Constants.SCREEN_HEIGHT - ObstaclesGroundConstants.OBSTACLE_HEIGHT - Constants.HEIGH_GROUND;
@@ -35,10 +35,12 @@ class ObstaclesGroundConstants {
 }
 
 class ObstaclesAerianConstants {
-    static int OBSTACLE_RIGHT = Constants.SCREEN_WIDTH;
-    static int OBSTACLE_BOTTOM = Constants.HEIGH_GROUND;
+
     private static int OBSTACLE_HEIGHT = 50;
-    static int OBSTACLE_TOP = ObstaclesAerianConstants.OBSTACLE_HEIGHT - Constants.HEIGH_GROUND;
     private static int OBSTACLE_WIDTH = 100;
+    private static int OBSTACLE_GAP_TOP = 600;
+    static int OBSTACLE_RIGHT = Constants.SCREEN_WIDTH;
+    static int OBSTACLE_BOTTOM = OBSTACLE_HEIGHT + OBSTACLE_GAP_TOP;
+    static int OBSTACLE_TOP = ObstaclesAerianConstants.OBSTACLE_HEIGHT - Constants.HEIGH_GROUND + OBSTACLE_GAP_TOP;
     static int OBSTACLE_LEFT = Constants.SCREEN_WIDTH + ObstaclesAerianConstants.OBSTACLE_WIDTH;
 }
