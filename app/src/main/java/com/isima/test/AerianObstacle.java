@@ -5,16 +5,13 @@ import android.graphics.Bitmap;
 public class AerianObstacle extends Obstacles {
 
     AerianObstacle(Bitmap movement_right, Bitmap movement_left, int area_left, int area_top, int area_right, int area_bottom) {
-        super(movement_right, movement_left, ObstaclesAerianConstants.OBSTACLE_LEFT, ObstaclesAerianConstants.OBSTACLE_TOP, ObstaclesAerianConstants.OBSTACLE_RIGHT, ObstaclesAerianConstants.OBSTACLE_BOTTOM);
+        super(movement_right, movement_left, area_left, area_top, area_right, area_bottom);
     }
 
-    @Override
     public boolean playerCollide(RectPlayer player) {
-        if (area_obstacle.bottom > player.getRectangle().top) {
-            return (area_obstacle.left - PlayerConstants.LEFT_PLAYER + PlayerConstants.GAP_RIGHT - 10) < player.getRectangle().right;
-        }
-        return false;
+        return area_obstacle.intersect(player.getRectangle().left - ObstaclesAerianConstants.OBSTACLE_WIDTH / 2, player.getRectangle().top - ObstaclesAerianConstants.OBSTACLE_HEIGHT / 2, player.getRectangle().right + ObstaclesAerianConstants.OBSTACLE_WIDTH, player.getRectangle().bottom);
     }
+
 }
 
 

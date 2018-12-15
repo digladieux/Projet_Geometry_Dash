@@ -1,12 +1,13 @@
 package com.isima.test;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class Obstacles implements GameObject {
+abstract public class Obstacles implements GameObject {
 
     protected Rect area_obstacle;
     private Animation animation;
@@ -17,17 +18,15 @@ public class Obstacles implements GameObject {
         animation.play();
     }
 
-    Rect getRectangle() {
-        return area_obstacle;
-    }
+    abstract public boolean playerCollide(RectPlayer player);
 
     void incrementX(float number_pixel_decrement) {
         area_obstacle.right -= number_pixel_decrement;
         area_obstacle.left -= number_pixel_decrement;
     }
 
-    public boolean playerCollide(RectPlayer player) { /* Todo: methode virtuelle pure */
-        return Rect.intersects(player.getRectangle(), area_obstacle);
+    Rect getRectangle() {
+        return area_obstacle;
     }
 
     @Override
@@ -35,9 +34,7 @@ public class Obstacles implements GameObject {
         Paint paint = new Paint();
         paint.setColor(Color.BLACK);
         canvas.drawRect(area_obstacle, paint);
-        //animation.draw(canvas, area_obstacle);
-
-
+        animation.draw(canvas, area_obstacle);
     }
 
     @Override

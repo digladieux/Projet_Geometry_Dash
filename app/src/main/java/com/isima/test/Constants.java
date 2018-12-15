@@ -13,21 +13,20 @@ class Constants
 }
 
 class PlayerConstants {
-    static int JUMP_TIME = 2000;
+    static int TOP_PLAYER = Constants.HEIGH_GROUND;
+    static int INIT_POSITION_X = 200;
     static int LEFT_PLAYER = 100;
-    static int RIGHT_PLAYER = 200;
-    static int TOP_PLAYER = 100;
-    static int BOTTOM_PLAYER = 200;
-    static int PLAYER_GAP = LEFT_PLAYER;
-    static int HEIGHT_JUMP = 400;
-    static int INIT_POSITION_Y = Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - PlayerConstants.LEFT_PLAYER + 20;
-    static int GAP_RIGHT = 30;
+    private static int PLAYER_WIDTH = 66;
+    static int RIGHT_PLAYER = LEFT_PLAYER + PLAYER_WIDTH;
+    private static int PLAYER_HEIGHT = 93;
+    static int BOTTOM_PLAYER = Constants.HEIGH_GROUND + PLAYER_HEIGHT;
+    static int INIT_POSITION_Y = Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - PLAYER_HEIGHT / 2;
 }
 
 class ObstaclesGroundConstants {
 
-    private static int OBSTACLE_HEIGHT = 100;
-    static int OBSTACLE_WIDTH = 75;
+    static int OBSTACLE_HEIGHT = 147;
+    static int OBSTACLE_WIDTH = 53;
     static int OBSTACLE_RIGHT = Constants.SCREEN_WIDTH;
     static int OBSTACLE_BOTTOM = Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND;
     static int OBSTACLE_TOP = Constants.SCREEN_HEIGHT - ObstaclesGroundConstants.OBSTACLE_HEIGHT - Constants.HEIGH_GROUND;
@@ -36,11 +35,11 @@ class ObstaclesGroundConstants {
 
 class ObstaclesAerianConstants {
 
-    private static int OBSTACLE_HEIGHT = 50;
-    private static int OBSTACLE_WIDTH = 100;
-    private static int OBSTACLE_GAP_TOP = 600;
+    static int OBSTACLE_HEIGHT = 47;
+    static int OBSTACLE_WIDTH = 70;
+    static int OBSTACLE_LEFT = Constants.SCREEN_WIDTH - ObstaclesAerianConstants.OBSTACLE_WIDTH;
+    private static int OBSTACLE_GAP_TOP = 200;
     static int OBSTACLE_RIGHT = Constants.SCREEN_WIDTH;
     static int OBSTACLE_BOTTOM = OBSTACLE_HEIGHT + OBSTACLE_GAP_TOP;
-    static int OBSTACLE_TOP = ObstaclesAerianConstants.OBSTACLE_HEIGHT - Constants.HEIGH_GROUND + OBSTACLE_GAP_TOP;
-    static int OBSTACLE_LEFT = Constants.SCREEN_WIDTH + ObstaclesAerianConstants.OBSTACLE_WIDTH;
+    static int OBSTACLE_TOP = OBSTACLE_GAP_TOP;
 }

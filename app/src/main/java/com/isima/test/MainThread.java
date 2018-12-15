@@ -8,13 +8,14 @@ public class MainThread extends Thread {
     private SurfaceHolder surfaceHolder ; /* Zone de la fenetre */
     private GamePanel gamePanel ; /* Zone du jeu */
     private boolean running ; /* Le thread tourne t'il */
-    public static Canvas canvas ; /* ce qu'on va dessiner */
+    //   public static Canvas canvas ; /* ce qu'on va dessiner */
 
     public void setRunning(boolean running)
     {
         this.running = running ;
     }
-    public MainThread(SurfaceHolder surfaceHolder, GamePanel gamePanel)
+
+    MainThread(SurfaceHolder surfaceHolder, GamePanel gamePanel)
     {
         super() ;
         /* TODO : changer les noms */
@@ -38,14 +39,15 @@ public class MainThread extends Thread {
         while(running)
         {
             startTime = System.nanoTime() ; /* Timer du system en nano secondes */
-            canvas = null ;
+            Canvas canvas = null;
 
             try
             {
+                final SurfaceHolder verrou = this.surfaceHolder;
                 canvas = this.surfaceHolder.lockCanvas() ; /* Le canvas pourra etre modifier */
 
                 /* synchronized permet d'attendre la fin de ce thread pour lancer la suite */
-                synchronized (surfaceHolder)
+                synchronized (verrou)
                 {
                     /* Section Critique : si on a pas fini d'afficher le surface holder a temps N, on peut pas commencer a traiter les donner du frame N+1 */
                     this.gamePanel.update() ;
@@ -82,7 +84,7 @@ public class MainThread extends Thread {
 
             totalTime += System.nanoTime() - startTime ;
             frameCount ++ ;
-            if (frameCount == MAX_FPS)
+            if (frameCount >= MAX_FPS)
             {
                 /* Moyenne fps */
                 double averageFPS = 1000 / ((totalTime / frameCount) / 1000000);

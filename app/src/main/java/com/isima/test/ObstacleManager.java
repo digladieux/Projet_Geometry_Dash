@@ -26,8 +26,8 @@ public class ObstacleManager {
 
         obstacles = new ArrayList<>() ;
         obstacles.add(initialisationGroundObstacle(ObstaclesGroundConstants.OBSTACLE_LEFT, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
-        //obstacles.add(initialisationGroundObstacle(Constants.SCREEN_WIDTH/2 + ObstaclesGroundConstants.OBSTACLE_WIDTH, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT/2, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
-        //obstacles.add(initialisationAerianObstacle(ObstaclesAerianConstants.OBSTACLE_LEFT, ObstaclesAerianConstants.OBSTACLE_TOP, ObstaclesAerianConstants.OBSTACLE_RIGHT, ObstaclesAerianConstants.OBSTACLE_BOTTOM));
+        obstacles.add(initialisationGroundObstacle(Constants.SCREEN_WIDTH / 2 + ObstaclesGroundConstants.OBSTACLE_WIDTH, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT / 2, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
+        obstacles.add(initialisationAerianObstacle(Constants.SCREEN_WIDTH / 3 + ObstaclesAerianConstants.OBSTACLE_WIDTH, ObstaclesAerianConstants.OBSTACLE_TOP, ObstaclesAerianConstants.OBSTACLE_RIGHT / 3, ObstaclesAerianConstants.OBSTACLE_BOTTOM));
     }
 
     private Obstacles initialisationGroundObstacle(int area_left, int area_top, int area_right, int area_bottom) {
@@ -70,7 +70,12 @@ public class ObstacleManager {
         }
         if(obstacles.get(obstacles.size() -1 ).getRectangle().left <= 0)
         {
-            obstacles.add(0, initialisationGroundObstacle(ObstaclesGroundConstants.OBSTACLE_LEFT, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
+            if (obstacles.get(obstacles.size() - 1) instanceof GroundObstacle) {
+                obstacles.add(0, initialisationGroundObstacle(ObstaclesGroundConstants.OBSTACLE_LEFT, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
+            } else {
+                obstacles.add(0, initialisationAerianObstacle(ObstaclesAerianConstants.OBSTACLE_LEFT, ObstaclesAerianConstants.OBSTACLE_TOP, ObstaclesAerianConstants.OBSTACLE_RIGHT, ObstaclesAerianConstants.OBSTACLE_BOTTOM));
+
+            }
             obstacles.remove(obstacles.size()-1) ;
             score ++ ;
         }

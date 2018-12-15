@@ -10,24 +10,20 @@ import android.view.MotionEvent;
 public class GamePlayScene implements Scene {
 
     /* Zone pour l'affichage de l'erreur */
-    private Rect r = new Rect() ;
+    private Rect text_gameover = new Rect();
     private RectPlayer player ;
     private Rect ground ;
-
-    /* Centre du rectangle du joueur */
     private Point playerPoint ;
     private ObstacleManager obstacleManager ;
-
     private boolean movingPlayer = false ;
     private boolean gameOver = false ;
     private long gameOverTime ;
-    private long jumpStart ;
-
     private long frameTime ; /* vitesse du bonhomme */
+
     GamePlayScene()
     {
-        player = new RectPlayer(new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER));
-        playerPoint = new Point(PlayerConstants.PLAYER_GAP, PlayerConstants.INIT_POSITION_Y);
+        player = new RectPlayer(new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER), 2, -50);
+        playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
         obstacleManager = new ObstacleManager();
 
@@ -35,8 +31,9 @@ public class GamePlayScene implements Scene {
         ground = new Rect(0, Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT) ;
     }
     private void reset() {
-        playerPoint = new Point(PlayerConstants.PLAYER_GAP, PlayerConstants.INIT_POSITION_Y);
+        playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
+        player.setCurrentSpeed(true);
         obstacleManager = new ObstacleManager();
         movingPlayer = false ;
 
@@ -48,35 +45,25 @@ public class GamePlayScene implements Scene {
                 frameTime = Constants.INIT_TIME;
             }
             frameTime = System.currentTimeMillis();
-            if (movingPlayer)
-            {
-                /* a opti */
-                if (System.currentTimeMillis() - jumpStart < PlayerConstants.JUMP_TIME / 2) {
-                    if (playerPoint.y > Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND - PlayerConstants.HEIGHT_JUMP)
-                    {
-                        playerPoint.y -= 2/25 * (System.currentTimeMillis() - jumpStart) +20;
-                    }
-                } else if (System.currentTimeMillis() - jumpStart < PlayerConstants.JUMP_TIME) {
-                    if (playerPoint.y < PlayerConstants.INIT_POSITION_Y)
-                    {
-                        playerPoint.y += 3/25 * ((System.currentTimeMillis() - jumpStart)/2) +20 ;
-                    }
-                } else {
+            if (movingPlayer) {
+                player.setCurrentSpeed(false);
+                playerPoint.y += player.getCurrentSpeed();
+                if (playerPoint.y > PlayerConstants.INIT_POSITION_Y) {
                     movingPlayer = false;
-                    playerPoint.y = PlayerConstants.INIT_POSITION_Y;
+                    player.setCurrentSpeed(true);
                 }
             }
 
             player.update(playerPoint);
             obstacleManager.update();
 
-            if (obstacleManager.playerCollide(player))
-            {
-                gameOver = true ;
-                gameOverTime = System.currentTimeMillis() ;
+            if (obstacleManager.playerCollide(player)) {
+                gameOver = true;
+                gameOverTime = System.currentTimeMillis();
             }
         }
     }
+
 
     @Override
     public void draw(Canvas canvas) {
@@ -112,7 +99,6 @@ public class GamePlayScene implements Scene {
                 if ( (!gameOver) && (!movingPlayer) )
                 {
                     movingPlayer = true ;
-                    jumpStart = System.currentTimeMillis() ;
                 }
                 /* On veut que l'ecran de game over reste 2 sec a l'écran */
                 if (gameOver && System.currentTimeMillis() - gameOverTime >= 2000)
@@ -126,12 +112,12 @@ public class GamePlayScene implements Scene {
     private void drawCenterText(Canvas canvas, Paint paint) {
         String text = "GameOver !";
         paint.setTextAlign(Paint.Align.LEFT);
-        canvas.getClipBounds(r);
-        int cHeight = r.height();
-        int cWidth = r.width();
-        paint.getTextBounds(text, 0, text.length(), r);
-        float x = cWidth / 2f - r.width() / 2f - r.left;
-        float y = cHeight / 2f + r.height() / 2f - r.bottom;
+        canvas.getClipBounds(text_gameover);
+        int cHeight = text_gameover.height();
+        int cWidth = text_gameover.width();
+        paint.getTextBounds(text, 0, text.length(), text_gameover);
+        float x = cWidth / 2f - text_gameover.width() / 2f - text_gameover.left;
+        float y = cHeight / 2f + text_gameover.height() / 2f - text_gameover.bottom;
         canvas.drawText(text, x, y, paint);
     }
 }

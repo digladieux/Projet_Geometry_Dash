@@ -11,10 +11,17 @@ public class RectPlayer implements GameObject {
     /* Classe de android studio toute faite RECT */
     private Rect rectangle ;
     private Animation walkRight;
+    private int velocity;
+    private int initSpeed;
+    private int currentSpeed;
 
-    RectPlayer(Rect rectangle)
+    RectPlayer(Rect rectangle, int velocity, int initSpeed)
     {
         this.rectangle = rectangle ;
+
+        this.velocity = velocity;
+        this.initSpeed = initSpeed;
+        this.currentSpeed = initSpeed;
 
         /* Creer des objet bitmap qui provienne de plusieurs sources differentes ici des fichiers */
 
@@ -28,6 +35,20 @@ public class RectPlayer implements GameObject {
 
     Rect getRectangle() {
         return rectangle;
+    }
+
+
+    int getCurrentSpeed() {
+        return currentSpeed;
+    }
+
+
+    void setCurrentSpeed(boolean reset) {
+        if (reset) {
+            this.currentSpeed = this.initSpeed;
+        } else {
+            this.currentSpeed += velocity;
+        }
     }
 
     @Override
