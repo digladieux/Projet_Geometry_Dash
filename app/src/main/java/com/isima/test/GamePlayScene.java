@@ -1,5 +1,7 @@
 package com.isima.test;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,16 +21,20 @@ public class GamePlayScene implements Scene {
     private boolean gameOver = false ;
     private long gameOverTime ;
     private long frameTime ; /* vitesse du bonhomme */
+    private Bitmap mScaledBackground;
 
     GamePlayScene()
     {
-        player = new RectPlayer(new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER), 2, -50);
+        player = new RectPlayer(new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER), 2, -40);
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
         obstacleManager = new ObstacleManager();
 
         frameTime = System.currentTimeMillis() ;
         ground = new Rect(0, Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT) ;
+
+        Bitmap mBackground = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.background_space);
+        this.mScaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
     }
     private void reset() {
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
@@ -68,12 +74,15 @@ public class GamePlayScene implements Scene {
     @Override
     public void draw(Canvas canvas) {
         /* Le fond d'écran est blanc */
-        canvas.drawColor(Color.WHITE);
+        Rect src = new Rect(0, 0, mScaledBackground.getWidth() - 1, mScaledBackground.getHeight() - 1);
+        Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
+        canvas.drawBitmap(mScaledBackground, src, dest, null);
+        //canvas.drawColor(Color.WHITE);
         /*Dessine sur le canvas le rectangle */
         player.draw(canvas);
         obstacleManager.draw(canvas);
         Paint ground_paint = new Paint() ;
-        ground_paint.setColor(Color.BLUE);
+        ground_paint.setColor(Color.GREEN);
         canvas.drawRect(ground,ground_paint);
         if (gameOver)
         {

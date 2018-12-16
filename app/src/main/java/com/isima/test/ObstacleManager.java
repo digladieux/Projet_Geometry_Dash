@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 
 import java.util.ArrayList;
@@ -26,20 +27,26 @@ public class ObstacleManager {
 
         obstacles = new ArrayList<>() ;
         obstacles.add(initialisationGroundObstacle(ObstaclesGroundConstants.OBSTACLE_LEFT, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
-        obstacles.add(initialisationGroundObstacle(Constants.SCREEN_WIDTH / 2 + ObstaclesGroundConstants.OBSTACLE_WIDTH, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT / 2, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
-        obstacles.add(initialisationAerianObstacle(Constants.SCREEN_WIDTH / 3 + ObstaclesAerianConstants.OBSTACLE_WIDTH, ObstaclesAerianConstants.OBSTACLE_TOP, ObstaclesAerianConstants.OBSTACLE_RIGHT / 3, ObstaclesAerianConstants.OBSTACLE_BOTTOM));
+        obstacles.add(initialisationGroundObstacle(Constants.SCREEN_WIDTH / 2, ObstaclesGroundConstants.OBSTACLE_TOP, Constants.SCREEN_WIDTH / 2 + ObstaclesGroundConstants.OBSTACLE_WIDTH, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
+        obstacles.add(initialisationAerianObstacle(3 * Constants.SCREEN_WIDTH / 4, ObstaclesAerianConstants.OBSTACLE_TOP, 3 * Constants.SCREEN_WIDTH / 4 + ObstaclesAerianConstants.OBSTACLE_WIDTH, ObstaclesAerianConstants.OBSTACLE_BOTTOM));
     }
 
     private Obstacles initialisationGroundObstacle(int area_left, int area_top, int area_right, int area_bottom) {
         Bitmap movement_left = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.snake_slime);
-        Bitmap movement_right = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.snake_slime_ani);
-        return new GroundObstacle(movement_left, movement_right, area_left, area_top, area_right, area_bottom);
+        Bitmap scaledMovementLeft = Bitmap.createScaledBitmap(movement_left, ObstaclesGroundConstants.OBSTACLE_WIDTH, ObstaclesGroundConstants.OBSTACLE_HEIGHT, true);
+
+        Matrix m = new Matrix();
+        m.preScale(-1, 1); /* Permet de definir la "taille de l'image" [-1 ; 1 ] */
+        Bitmap scaledMovementRight = Bitmap.createBitmap(scaledMovementLeft, 0, 0, scaledMovementLeft.getWidth(), scaledMovementLeft.getHeight(), m, false);
+        return new GroundObstacle(scaledMovementLeft, scaledMovementRight, area_left, area_top, area_right, area_bottom);
     }
 
     private Obstacles initialisationAerianObstacle(int area_left, int area_top, int area_right, int area_bottom) {
         Bitmap movement_left = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.bat);
         Bitmap movement_right = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.bat_fly);
-        return new AerianObstacle(movement_left, movement_right, area_left, area_top, area_right, area_bottom);
+        Bitmap scaledMovementLeft = Bitmap.createScaledBitmap(movement_left, ObstaclesAerianConstants.OBSTACLE_WIDTH, ObstaclesAerianConstants.OBSTACLE_HEIGHT, true);
+        Bitmap scaledMovementRight = Bitmap.createScaledBitmap(movement_right, ObstaclesAerianConstants.OBSTACLE_WIDTH, ObstaclesAerianConstants.OBSTACLE_HEIGHT, true);
+        return new AerianObstacle(scaledMovementLeft, scaledMovementRight, area_left, area_top, area_right, area_bottom);
     }
 
     boolean playerCollide(RectPlayer player)
@@ -62,22 +69,21 @@ public class ObstacleManager {
         int elapsedTime = (int) (System.currentTimeMillis() - startTime);
         startTime = System.currentTimeMillis() ;
         /* Combien de temps pour parcourir un ecran (10sec) et ca diminue apres */
-        float speed = (float)(Math.sqrt(1 + (startTime - initTime)/5000.0)) * Constants.SCREEN_HEIGHT/10000.0f ;
+        float speed = (float) (Math.sqrt(1 + (startTime - initTime) / 5000.0)) * Constants.SCREEN_HEIGHT / 5000.0f;
         for (Obstacles ob : obstacles)
         {
             ob.incrementX(speed * elapsedTime);
             ob.update();
-        }
-        if(obstacles.get(obstacles.size() -1 ).getRectangle().left <= 0)
-        {
-            if (obstacles.get(obstacles.size() - 1) instanceof GroundObstacle) {
-                obstacles.add(0, initialisationGroundObstacle(ObstaclesGroundConstants.OBSTACLE_LEFT, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
-            } else {
-                obstacles.add(0, initialisationAerianObstacle(ObstaclesAerianConstants.OBSTACLE_LEFT, ObstaclesAerianConstants.OBSTACLE_TOP, ObstaclesAerianConstants.OBSTACLE_RIGHT, ObstaclesAerianConstants.OBSTACLE_BOTTOM));
+            if (ob.getRectangle().right <= 0) {
+                if (ob instanceof GroundObstacle) {
+                    obstacles.add(0, initialisationGroundObstacle(ObstaclesGroundConstants.OBSTACLE_LEFT, ObstaclesGroundConstants.OBSTACLE_TOP, ObstaclesGroundConstants.OBSTACLE_RIGHT, ObstaclesGroundConstants.OBSTACLE_BOTTOM));
+                } else {
+                    obstacles.add(0, initialisationAerianObstacle(ObstaclesAerianConstants.OBSTACLE_LEFT, ObstaclesAerianConstants.OBSTACLE_TOP, ObstaclesAerianConstants.OBSTACLE_RIGHT, ObstaclesAerianConstants.OBSTACLE_BOTTOM));
 
+                }
+                obstacles.remove(ob);
+                score++;
             }
-            obstacles.remove(obstacles.size()-1) ;
-            score ++ ;
         }
     }
 

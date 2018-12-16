@@ -6,14 +6,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-public class Animation {
+class Animation {
 
     private Bitmap[] frames ;
     private int frameIndex ;
+
+    private boolean isPLaying = false;
     private float frameTime; /* temps entre les frame */
     private long lastFrame;
-    private boolean isPLaying = false ;
-
 
     Animation(Bitmap[] frames, float animTime) {
         this.frames = frames ;
@@ -24,20 +24,29 @@ public class Animation {
         lastFrame = System.currentTimeMillis();
     }
 
+    boolean isPLaying() {
+        return isPLaying;
+    }
+
     void play() {
         frameIndex = 0;
         isPLaying = true;
-        lastFrame = System.currentTimeMillis() ;
+        lastFrame = System.currentTimeMillis();
+    }
+
+    void stop() {
+        isPLaying = false;
     }
 
     public void draw(Canvas canvas, Rect destination)
     {
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        canvas.drawRect(destination, paint);
-        canvas.drawBitmap(frames[frameIndex] , null , destination , new Paint());
+        /* drawBitmat prend une bitmap, la proportion de l'image que l'on veut prendre (rogner ou pas ?), le rectangle où on va afficher la bitmap et le dessin */
+        if (!isPLaying) {
+            return;
+        }
+        /* Une image s'adapte parfaitement a sa destination. Pour eviter d'etirer l'image, on la met a l'echelle pour qu'elle conserve sa taille */
+        canvas.drawBitmap(frames[frameIndex], null, destination, new Paint());
     }
-
 
     public void update()
     {

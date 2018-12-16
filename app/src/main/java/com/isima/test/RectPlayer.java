@@ -10,7 +10,7 @@ public class RectPlayer implements GameObject {
 
     /* Classe de android studio toute faite RECT */
     private Rect rectangle ;
-    private Animation walkRight;
+    private AnimationManager animationManager;
     private int velocity;
     private int initSpeed;
     private int currentSpeed;
@@ -28,9 +28,19 @@ public class RectPlayer implements GameObject {
         /* On va decoder l'image bitmap, en la recuperant et la mettant dans une image bitmap */
         Bitmap walk1 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue_walk1) ;
         Bitmap walk2 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue_walk2) ;
-        walkRight = new Animation(new Bitmap[]{walk1, walk2}, 0.5f);
-        walkRight.play();
 
+        Bitmap jump1 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue_jump);
+        Bitmap gravity1 = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.alienblue_hurt);
+        Bitmap scaledWalk1 = Bitmap.createScaledBitmap(walk1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledWalk2 = Bitmap.createScaledBitmap(walk2, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledJump = Bitmap.createScaledBitmap(jump1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledGravity = Bitmap.createScaledBitmap(gravity1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+
+        Animation jump = new Animation(new Bitmap[]{scaledJump}, 2);
+        Animation gravity = new Animation(new Bitmap[]{scaledGravity}, 2);
+        Animation walkRight = new Animation(new Bitmap[]{scaledWalk1, scaledWalk2}, 0.5f);
+
+        animationManager = new AnimationManager(new Animation[]{walkRight, jump, gravity});
     }
 
     Rect getRectangle() {
@@ -53,12 +63,12 @@ public class RectPlayer implements GameObject {
 
     @Override
     public void draw(Canvas canvas) {
-        walkRight.draw(canvas, rectangle);
+        animationManager.draw(canvas, rectangle);
     }
 
     @Override
     public void update() {
-        walkRight.update();
+        animationManager.update();
     }
 
     /* Classe de android studio toute faite Point */
@@ -67,8 +77,21 @@ public class RectPlayer implements GameObject {
         /* l'origine n'est pas en bas a gauche mais en haut a gauche, et quand on descend on augmenter et a droite on augmente */
         /* left, top, right, bottom */
         /* Le point est le centre du rectangle */
+        float oldTop = rectangle.top; /* est ton aller a gauche ou pas */
+
+        /* l'origine n'est pas en bas a gauche mais en haut a gauche, et quand on descend on augmenter et a droite on augmente */
+        /* left, top, right, bottom */
+        /* Le point est le centre du rectangle */
         rectangle.set(point.x - rectangle.width()/2, point.y - rectangle.height()/2,point.x + rectangle.width()/2, point.y + rectangle.height()/2);
-        walkRight.update();
+
+        int state = 0; /* etat de l'anim, idle, walk1 walk 2 ? */
+        if (rectangle.top - oldTop > 5) /* On aurait pu mettre 0, mais sinon il y aurait eu trop d'anim, on prefere laisser un peu d'espace entre une anim donc 5 pixels*/ {
+            state = 2; /* allez a gauche */
+        } else if (rectangle.top - oldTop < -5) {
+            state = 1; /* allez a droite */
+        }
+        animationManager.playAnim(state);
+        animationManager.update();
     }
 }
 

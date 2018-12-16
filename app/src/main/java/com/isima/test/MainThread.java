@@ -43,11 +43,10 @@ public class MainThread extends Thread {
 
             try
             {
-                final SurfaceHolder verrou = this.surfaceHolder;
                 canvas = this.surfaceHolder.lockCanvas() ; /* Le canvas pourra etre modifier */
 
                 /* synchronized permet d'attendre la fin de ce thread pour lancer la suite */
-                synchronized (verrou)
+                synchronized (canvas)
                 {
                     /* Section Critique : si on a pas fini d'afficher le surface holder a temps N, on peut pas commencer a traiter les donner du frame N+1 */
                     this.gamePanel.update() ;

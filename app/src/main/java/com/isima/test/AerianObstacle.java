@@ -9,9 +9,8 @@ public class AerianObstacle extends Obstacles {
     }
 
     public boolean playerCollide(RectPlayer player) {
-        return area_obstacle.intersect(player.getRectangle().left - ObstaclesAerianConstants.OBSTACLE_WIDTH / 2, player.getRectangle().top - ObstaclesAerianConstants.OBSTACLE_HEIGHT / 2, player.getRectangle().right + ObstaclesAerianConstants.OBSTACLE_WIDTH, player.getRectangle().bottom);
+        return area_obstacle.intersect(player.getRectangle().left - ObstaclesAerianConstants.OBSTACLE_WIDTH / 2, player.getRectangle().top - ObstaclesAerianConstants.OBSTACLE_HEIGHT / 2, player.getRectangle().right + ObstaclesAerianConstants.OBSTACLE_WIDTH / 2, player.getRectangle().bottom);
     }
-
 }
 
 

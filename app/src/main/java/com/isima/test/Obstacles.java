@@ -1,21 +1,19 @@
 package com.isima.test;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 
 abstract public class Obstacles implements GameObject {
 
     protected Rect area_obstacle;
-    private Animation animation;
+    private AnimationManager animationManager;
 
     Obstacles(Bitmap movement_right, Bitmap movement_left, int area_left, int area_top, int area_right, int are_bottom) {
         area_obstacle = new Rect(area_left, area_top, area_right, are_bottom);
-        animation = new Animation(new Bitmap[]{movement_left, movement_right}, 0.25f);
-        animation.play();
+        Animation animation = new Animation(new Bitmap[]{movement_left, movement_right}, 0.25f);
+        animationManager = new AnimationManager(new Animation[]{animation});
+        animationManager.playAnim(0);
     }
 
     abstract public boolean playerCollide(RectPlayer player);
@@ -31,14 +29,11 @@ abstract public class Obstacles implements GameObject {
 
     @Override
     public void draw(Canvas canvas) {
-        Paint paint = new Paint();
-        paint.setColor(Color.BLACK);
-        canvas.drawRect(area_obstacle, paint);
-        animation.draw(canvas, area_obstacle);
+        animationManager.draw(canvas, area_obstacle);
     }
 
     @Override
     public void update() {
-        animation.update();
+        animationManager.update();
     }
 }
