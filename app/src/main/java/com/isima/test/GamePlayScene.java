@@ -14,7 +14,6 @@ public class GamePlayScene implements Scene {
     /* Zone pour l'affichage de l'erreur */
     private Rect text_gameover = new Rect();
     private RectPlayer player ;
-    private Rect ground ;
     private Point playerPoint ;
     private ObstacleManager obstacleManager ;
     private boolean movingPlayer = false ;
@@ -22,17 +21,16 @@ public class GamePlayScene implements Scene {
     private long gameOverTime ;
     private long frameTime ; /* vitesse du bonhomme */
     private Bitmap mScaledBackground;
+    private boolean actionDown;
 
     GamePlayScene()
     {
-        player = new RectPlayer(new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER), 2, -40);
+        player = new RectPlayer(new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER), 1, -30);
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
         obstacleManager = new ObstacleManager();
-
+        this.actionDown = false;
         frameTime = System.currentTimeMillis() ;
-        ground = new Rect(0, Constants.SCREEN_HEIGHT - Constants.HEIGH_GROUND, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT) ;
-
         Bitmap mBackground = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.background_space);
         this.mScaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
     }
@@ -54,7 +52,7 @@ public class GamePlayScene implements Scene {
             if (movingPlayer) {
                 player.setCurrentSpeed(false);
                 playerPoint.y += player.getCurrentSpeed();
-                if (playerPoint.y > PlayerConstants.INIT_POSITION_Y) {
+                if (playerPoint.y == PlayerConstants.INIT_POSITION_Y) {
                     movingPlayer = false;
                     player.setCurrentSpeed(true);
                 }
@@ -73,17 +71,11 @@ public class GamePlayScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-        /* Le fond d'écran est blanc */
         Rect src = new Rect(0, 0, mScaledBackground.getWidth() - 1, mScaledBackground.getHeight() - 1);
         Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
         canvas.drawBitmap(mScaledBackground, src, dest, null);
-        //canvas.drawColor(Color.WHITE);
-        /*Dessine sur le canvas le rectangle */
         player.draw(canvas);
         obstacleManager.draw(canvas);
-        Paint ground_paint = new Paint() ;
-        ground_paint.setColor(Color.GREEN);
-        canvas.drawRect(ground,ground_paint);
         if (gameOver)
         {
             Paint paint = new Paint() ;
@@ -102,7 +94,13 @@ public class GamePlayScene implements Scene {
 
     public void recieveTouch(MotionEvent event) {
         /* getAction : bouton relache ? appuye ? bouge */
-        if (event.getAction() == MotionEvent.ACTION_DOWN)
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            this.actionDown = true;
+        }
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            this.actionDown = false;
+        }
+        if (this.actionDown)
         {
                 /* Si le joueur n'a pas perdu et appuie dans le rectangle */
                 if ( (!gameOver) && (!movingPlayer) )

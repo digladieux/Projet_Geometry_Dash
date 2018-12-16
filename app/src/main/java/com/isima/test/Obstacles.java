@@ -6,7 +6,7 @@ import android.graphics.Rect;
 
 abstract public class Obstacles implements GameObject {
 
-    protected Rect area_obstacle;
+    Rect area_obstacle;
     private AnimationManager animationManager;
 
     Obstacles(Bitmap movement_right, Bitmap movement_left, int area_left, int area_top, int area_right, int are_bottom) {
@@ -16,7 +16,10 @@ abstract public class Obstacles implements GameObject {
         animationManager.playAnim(0);
     }
 
-    abstract public boolean playerCollide(RectPlayer player);
+
+    public boolean playerCollide(RectPlayer player) {
+        return area_obstacle.intersect(player.getRectangle());
+    }
 
     void incrementX(float number_pixel_decrement) {
         area_obstacle.right -= number_pixel_decrement;

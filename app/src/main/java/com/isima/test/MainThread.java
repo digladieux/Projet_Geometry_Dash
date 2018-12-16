@@ -4,8 +4,8 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 public class MainThread extends Thread {
-    private static final int MAX_FPS = 30;  /* final = const en c++ */
-    private SurfaceHolder surfaceHolder ; /* Zone de la fenetre */
+    private static final int MAX_FPS = 60;  /* final = const en c++ */
+    private final SurfaceHolder surfaceHolder; /* Zone de la fenetre */
     private GamePanel gamePanel ; /* Zone du jeu */
     private boolean running ; /* Le thread tourne t'il */
     //   public static Canvas canvas ; /* ce qu'on va dessiner */
@@ -46,7 +46,7 @@ public class MainThread extends Thread {
                 canvas = this.surfaceHolder.lockCanvas() ; /* Le canvas pourra etre modifier */
 
                 /* synchronized permet d'attendre la fin de ce thread pour lancer la suite */
-                synchronized (canvas)
+                synchronized (surfaceHolder)
                 {
                     /* Section Critique : si on a pas fini d'afficher le surface holder a temps N, on peut pas commencer a traiter les donner du frame N+1 */
                     this.gamePanel.update() ;
