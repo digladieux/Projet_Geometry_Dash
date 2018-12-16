@@ -2,7 +2,6 @@ package com.isima.test;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 
 public class GroundObstacle extends Obstacles {
     private GroundObstacle(Bitmap idle, int area_left, int area_top, int area_right, int area_bottom)

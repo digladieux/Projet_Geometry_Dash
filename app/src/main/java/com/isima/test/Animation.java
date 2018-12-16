@@ -2,17 +2,16 @@ package com.isima.test;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
 class Animation {
 
-    private Bitmap[] frames ;
+    private final Bitmap[] frames;
     private int frameIndex ;
 
     private boolean isPLaying = false;
-    private float frameTime; /* temps entre les frame */
+    private final float frameTime; /* temps entre les frame */
     private long lastFrame;
 
     Animation(Bitmap[] frames, float animTime) {

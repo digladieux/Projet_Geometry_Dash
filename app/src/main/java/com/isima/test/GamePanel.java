@@ -12,8 +12,7 @@ import android.view.SurfaceView;
 /* SurfaceHolder.Callback : Tous les changements autour de l'ecran, pour les faire en parallele du prog */
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     private MainThread thread ;
-    private SceneManager manager ;
-
+    private final SceneManager manager;
     public GamePanel(Context context) /*Context : L'etat a l'intant t du telephone. On peut allumer bluetooth, la camera */
     {
         super(context) ;
@@ -23,7 +22,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
 
         Constants.CURRENT_CONTEXT = context ;
-
         thread = new MainThread(getHolder(), this) ;
         manager = new SceneManager() ;
         /* TODO :  FOCUSABLE_AUTO en parametre */
@@ -75,7 +73,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
     public boolean onTouchEvent(MotionEvent event) {
         manager.receiveTouch(event) ;
         return true;
-        //return super.onTouchEvent(event) ;
     }
 
     /* Mettre a jour le jeu, image par image */

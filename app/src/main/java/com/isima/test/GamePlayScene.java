@@ -12,21 +12,21 @@ import android.view.MotionEvent;
 public class GamePlayScene implements Scene {
 
     /* Zone pour l'affichage de l'erreur */
-    private Rect message = new Rect();
-    private RectPlayer player ;
+    private final Rect message = new Rect();
+    private final RectPlayer player;
     private Point playerPoint ;
     private ObstacleManager obstacleManager ;
     private boolean movingPlayer = false ;
     private boolean gameOver = false ;
     private boolean win = false;
     private long frameTime ; /* vitesse du bonhomme */
-    private Bitmap mScaledBackground;
+    private final Bitmap mScaledBackground;
     private boolean actionDown;
     private int attempt;
 
     GamePlayScene()
     {
-        player = new RectPlayer(new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER), 1, -30);
+        player = new RectPlayer(new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER));
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
         obstacleManager = new ObstacleManager(1);
@@ -105,7 +105,7 @@ public class GamePlayScene implements Scene {
 
     @Override
     public void terminate() {
-        SceneManager.ACTIVE_SCENE = 0 ;
+        SceneManager.ACTIVE_SCENE = 1;
     }
 
     @Override

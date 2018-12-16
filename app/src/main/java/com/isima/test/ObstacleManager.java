@@ -1,18 +1,13 @@
 package com.isima.test;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-
 import java.util.ArrayList;
-public class ObstacleManager {
-    private ArrayList <Obstacles> obstacles;
+import java.util.Iterator;
+
+class ObstacleManager {
+    private final ArrayList <Obstacles> obstacles;
     private long startTime ; /* debut frame */
-    private long initTime ; /* debut jeu */
+    private final long initTime; /* debut jeu */
 
     ObstacleManager(int map)
     {
@@ -45,15 +40,21 @@ public class ObstacleManager {
         int elapsedTime = (int) (System.currentTimeMillis() - startTime);
         startTime = System.currentTimeMillis() ;
         /* Combien de temps pour parcourir un ecran (10sec) et ca diminue apres */
-        float speed = (float) (Math.sqrt(1 + (startTime - initTime) / 5000.0)) * Constants.SCREEN_HEIGHT / 3000.0f;
-        for (Obstacles ob : obstacles)
+        float speedBat = (float) (Math.sqrt(1 + (startTime - initTime) / 3000.0)) * Constants.SCREEN_HEIGHT / 3000.0f;
+        float speedMonster = (float) (Math.sqrt(1 + (startTime - initTime) / 5000.0)) * Constants.SCREEN_HEIGHT / 5000.0f;
+
+        Iterator <Obstacles> it = obstacles.iterator();
+        while (it.hasNext())
         {
-            //if (!(ob instanceof GroundObstacle)) {
-                ob.incrementX(speed * elapsedTime);
-            //}
+            Obstacles ob = it.next();
+            if (ob instanceof BatObstacle) {
+                ob.incrementX(speedBat * elapsedTime);
+            } else {
+                ob.incrementX(speedMonster * elapsedTime);
+            }
             ob.update();
             if (ob.getRectangle().right <= 0) {
-                obstacles.remove(ob);
+                it.remove();
             }
         }
     }

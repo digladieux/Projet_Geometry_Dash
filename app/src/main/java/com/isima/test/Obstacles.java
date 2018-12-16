@@ -4,10 +4,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-abstract public class Obstacles implements GameObject {
+abstract class Obstacles {
 
-    Rect area_obstacle;
-    private AnimationManager animationManager;
+    final Rect area_obstacle;
+    private final AnimationManager animationManager;
 
     Obstacles(Bitmap movement_right, Bitmap movement_left, int area_left, int area_top, int area_right, int are_bottom) {
         area_obstacle = new Rect(area_left, area_top, area_right, are_bottom);
@@ -37,12 +37,11 @@ abstract public class Obstacles implements GameObject {
         return area_obstacle;
     }
 
-    @Override
+
     public void draw(Canvas canvas) {
         animationManager.draw(canvas, area_obstacle);
     }
 
-    @Override
     public void update() {
         animationManager.update();
     }

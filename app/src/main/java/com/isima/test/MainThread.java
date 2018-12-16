@@ -3,10 +3,10 @@ package com.isima.test;
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
-public class MainThread extends Thread {
+class MainThread extends Thread {
     private static final int MAX_FPS = 60;  /* final = const en c++ */
     private final SurfaceHolder surfaceHolder; /* Zone de la fenetre */
-    private GamePanel gamePanel ; /* Zone du jeu */
+    private final GamePanel gamePanel; /* Zone du jeu */
     private boolean running ; /* Le thread tourne t'il */
     //   public static Canvas canvas ; /* ce qu'on va dessiner */
 

@@ -6,21 +6,21 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-public class RectPlayer implements GameObject {
+class RectPlayer {
 
     /* Classe de android studio toute faite RECT */
-    private Rect rectangle ;
-    private AnimationManager animationManager;
-    private int velocity;
-    private int initSpeed;
+    private final Rect rectangle;
+    private final AnimationManager animationManager;
+    private final int velocity;
+    private final int initSpeed;
     private int currentSpeed;
 
-    RectPlayer(Rect rectangle, int velocity, int initSpeed)
+    RectPlayer(Rect rectangle)
     {
         this.rectangle = rectangle ;
 
-        this.velocity = velocity;
-        this.initSpeed = initSpeed;
+        this.velocity = PlayerConstants.VELOCITY;
+        this.initSpeed = PlayerConstants.SPEED;
         this.currentSpeed = initSpeed;
 
         /* Creer des objet bitmap qui provienne de plusieurs sources differentes ici des fichiers */
@@ -61,14 +61,8 @@ public class RectPlayer implements GameObject {
         }
     }
 
-    @Override
     public void draw(Canvas canvas) {
         animationManager.draw(canvas, rectangle);
-    }
-
-    @Override
-    public void update() {
-        animationManager.update();
     }
 
     /* Classe de android studio toute faite Point */

@@ -3,16 +3,16 @@ package com.isima.test;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
-public class AnimationManager {
+class AnimationManager {
 
-    private Animation[] animations;
+    private final Animation[] animations;
     private int animationIndex = 0;
 
-    public AnimationManager(Animation[] animations) {
+    AnimationManager(Animation[] animations) {
         this.animations = animations;
     }
 
-    public void playAnim(int index) {
+    void playAnim(int index) {
         for (int i = 0; i < animations.length; i++) {
             if (i == index) {
                 if (!animations[animationIndex].isPLaying()) {

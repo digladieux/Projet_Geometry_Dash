@@ -3,7 +3,7 @@ package com.isima.test;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
-public interface Scene {
+interface Scene {
     void update();
 
     void draw(Canvas canvas);

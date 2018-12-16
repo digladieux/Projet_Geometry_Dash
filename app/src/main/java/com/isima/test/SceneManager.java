@@ -5,9 +5,9 @@ import android.view.MotionEvent;
 
 import java.util.ArrayList;
 
-public class SceneManager {
+class SceneManager {
 
-    private ArrayList<Scene> scenes = new ArrayList<>() ;
+    private final ArrayList <Scene> scenes = new ArrayList <>();
     static int ACTIVE_SCENE;
 
     SceneManager()
