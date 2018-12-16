@@ -16,6 +16,13 @@ abstract public class Obstacles implements GameObject {
         animationManager.playAnim(0);
     }
 
+    Obstacles(Bitmap idle, int area_left, int area_top, int area_right, int are_bottom) {
+        area_obstacle = new Rect(area_left, area_top, area_right, are_bottom);
+        Animation idleGround = new Animation(new Bitmap[]{idle}, 2);
+        animationManager = new AnimationManager(new Animation[]{idleGround});
+        animationManager.playAnim(0);
+    }
+
 
     public boolean playerCollide(RectPlayer player) {
         return area_obstacle.intersect(player.getRectangle());

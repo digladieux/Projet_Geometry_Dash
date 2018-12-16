@@ -11,60 +11,46 @@ import android.graphics.Paint;
 import java.util.ArrayList;
 public class ObstacleManager {
     private ArrayList <Obstacles> obstacles;
-
-    /* Pour eviter de generer un rectangle en dehors de l'écran */
-
     private long startTime ; /* debut frame */
-
     private long initTime ; /* debut jeu */
 
-    private int score = 0 ;
-
-
-    ObstacleManager()
+    ObstacleManager(int map)
     {
-        /* Espace entre les obstacles */
         startTime = initTime = System.currentTimeMillis() ;
+        switch (map) {
+            case 1:
+                obstacles = initialisationMap1();
+                break;
+        }
 
-        obstacles = new ArrayList<>() ;
-        obstacles.add(initialisationSnakeObstacle(ConstantsSnakeObstacle.OBSTACLE_LEFT, ConstantsSnakeObstacle.OBSTACLE_TOP, ConstantsSnakeObstacle.OBSTACLE_RIGHT, ConstantsSnakeObstacle.OBSTACLE_BOTTOM));
-        //obstacles.add(initialisationSnakeObstacle(Constants.SCREEN_WIDTH / 2, ConstantsSnakeObstacle.OBSTACLE_TOP, Constants.SCREEN_WIDTH / 2 + ConstantsSnakeObstacle.OBSTACLE_WIDTH, ConstantsSnakeObstacle.OBSTACLE_BOTTOM));
-        obstacles.add(initialisationBatObstacle(3 * Constants.SCREEN_WIDTH / 4, ConstantsBatObstacle.OBSTACLE_TOP, 3 * Constants.SCREEN_WIDTH / 4 + ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_BOTTOM));
+    }
 
+    public int size() {
+        return obstacles.size();
+    }
+
+    private ArrayList <Obstacles> initialisationMap1() {
+        ArrayList <Obstacles> level = new ArrayList <>();
+
+        level.add(SnakeObstacle.initialisationSnakeObstacle(Constants.SCREEN_WIDTH, ConstantsSnakeObstacle.OBSTACLE_TOP, Constants.SCREEN_WIDTH + ConstantsSnakeObstacle.OBSTACLE_WIDTH, ConstantsSnakeObstacle.OBSTACLE_BOTTOM));
+        level.add(SnakeObstacle.initialisationSnakeObstacle(2 * Constants.SCREEN_WIDTH, ConstantsSnakeObstacle.OBSTACLE_TOP, 2 * Constants.SCREEN_WIDTH + ConstantsSnakeObstacle.OBSTACLE_WIDTH, ConstantsSnakeObstacle.OBSTACLE_BOTTOM));
+        level.add(SnakeObstacle.initialisationSnakeObstacle(3 * Constants.SCREEN_WIDTH, ConstantsSnakeObstacle.OBSTACLE_TOP, 3 * Constants.SCREEN_WIDTH + ConstantsSnakeObstacle.OBSTACLE_WIDTH, ConstantsSnakeObstacle.OBSTACLE_BOTTOM));
+        level.add(SnakeObstacle.initialisationSnakeObstacle(4 * Constants.SCREEN_WIDTH, ConstantsSnakeObstacle.OBSTACLE_TOP, 4 * Constants.SCREEN_WIDTH + ConstantsSnakeObstacle.OBSTACLE_WIDTH, ConstantsSnakeObstacle.OBSTACLE_BOTTOM));
+        level.add(SnakeObstacle.initialisationSnakeObstacle(5 * Constants.SCREEN_WIDTH, ConstantsSnakeObstacle.OBSTACLE_TOP, 5 * Constants.SCREEN_WIDTH + ConstantsSnakeObstacle.OBSTACLE_WIDTH, ConstantsSnakeObstacle.OBSTACLE_BOTTOM));
+        level.add(BatObstacle.initialisationBatObstacle(Constants.SCREEN_WIDTH, ConstantsBatObstacle.OBSTACLE_TOP, Constants.SCREEN_WIDTH + ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_BOTTOM));
+        level.add(BatObstacle.initialisationBatObstacle(2 * Constants.SCREEN_WIDTH, ConstantsBatObstacle.OBSTACLE_TOP, 2 * Constants.SCREEN_WIDTH + ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_BOTTOM));
+        level.add(BatObstacle.initialisationBatObstacle(3 * Constants.SCREEN_WIDTH, ConstantsBatObstacle.OBSTACLE_TOP, 3 * Constants.SCREEN_WIDTH + ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_BOTTOM));
+        level.add(BatObstacle.initialisationBatObstacle(4 * Constants.SCREEN_WIDTH, ConstantsBatObstacle.OBSTACLE_TOP, 4 * Constants.SCREEN_WIDTH + ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_BOTTOM));
+        level.add(BatObstacle.initialisationBatObstacle(5 * Constants.SCREEN_WIDTH, ConstantsBatObstacle.OBSTACLE_TOP, 5 * Constants.SCREEN_WIDTH + ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_BOTTOM));
         int i = 0;
-        while (i * ConstantsGroundObstacle.OBSTACLE_WIDTH < Constants.SCREEN_WIDTH) {
-            obstacles.add(initialisationGroundObstacle(ConstantsGroundObstacle.OBSTACLE_WIDTH * i + ConstantsGroundObstacle.OBSTACLE_LEFT, ConstantsGroundObstacle.OBSTACLE_TOP, ConstantsGroundObstacle.OBSTACLE_WIDTH * i + ConstantsGroundObstacle.OBSTACLE_WIDTH, ConstantsGroundObstacle.OBSTACLE_BOTTOM));
+        while (i * ConstantsGroundObstacle.OBSTACLE_WIDTH < Constants.SCREEN_WIDTH * 5) {
+            level.add(GroundObstacle.initialisationGroundObstacle(ConstantsGroundObstacle.OBSTACLE_WIDTH * i + ConstantsGroundObstacle.OBSTACLE_LEFT, ConstantsGroundObstacle.OBSTACLE_TOP, ConstantsGroundObstacle.OBSTACLE_WIDTH * i + ConstantsGroundObstacle.OBSTACLE_WIDTH, ConstantsGroundObstacle.OBSTACLE_BOTTOM));
             i++;
         }
+        return level;
     }
 
-    private Obstacles initialisationSnakeObstacle(int area_left, int area_top, int area_right, int area_bottom) {
-        Bitmap movement_left = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.snake_slime);
-        Bitmap scaledMovementLeft = Bitmap.createScaledBitmap(movement_left, ConstantsSnakeObstacle.OBSTACLE_WIDTH, ConstantsSnakeObstacle.OBSTACLE_HEIGHT, true);
 
-        Matrix m = new Matrix();
-        m.preScale(-1, 1); /* Permet de definir la "taille de l'image" [-1 ; 1 ] */
-        Bitmap scaledMovementRight = Bitmap.createBitmap(scaledMovementLeft, 0, 0, scaledMovementLeft.getWidth(), scaledMovementLeft.getHeight(), m, false);
-        return new SnakeObstacle(scaledMovementLeft, scaledMovementRight, area_left, area_top, area_right, area_bottom);
-    }
-
-    private Obstacles initialisationBatObstacle(int area_left, int area_top, int area_right, int area_bottom) {
-        Bitmap movement_left = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.bat);
-        Bitmap movement_right = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.bat_fly);
-        Bitmap scaledMovementLeft = Bitmap.createScaledBitmap(movement_left, ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_HEIGHT, true);
-        Bitmap scaledMovementRight = Bitmap.createScaledBitmap(movement_right, ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_HEIGHT, true);
-        return new BatObstacle(scaledMovementLeft, scaledMovementRight, area_left, area_top, area_right, area_bottom);
-    }
-
-    private Obstacles initialisationGroundObstacle(int area_left, int area_top, int area_right, int area_bottom) {
-        Bitmap movement_left = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.grass_block);
-        Bitmap scaledMovementLeft = Bitmap.createScaledBitmap(movement_left, ConstantsGroundObstacle.OBSTACLE_WIDTH, ConstantsGroundObstacle.OBSTACLE_HEIGHT, true);
-
-        Matrix m = new Matrix();
-        m.preScale(-1, 1); /* Permet de definir la "taille de l'image" [-1 ; 1 ] */
-        Bitmap scaledMovementRight = Bitmap.createBitmap(scaledMovementLeft, 0, 0, scaledMovementLeft.getWidth(), scaledMovementLeft.getHeight(), m, false);
-        return new GroundObstacle(scaledMovementLeft, scaledMovementRight, area_left, area_top, area_right, area_bottom);
-    }
     boolean playerCollide(RectPlayer player)
     {
         boolean collision = false;
@@ -88,18 +74,12 @@ public class ObstacleManager {
         float speed = (float) (Math.sqrt(1 + (startTime - initTime) / 5000.0)) * Constants.SCREEN_HEIGHT / 3000.0f;
         for (Obstacles ob : obstacles)
         {
-            if (!(ob instanceof GroundObstacle)) {
+            //if (!(ob instanceof GroundObstacle)) {
                 ob.incrementX(speed * elapsedTime);
-            }
+            //}
             ob.update();
             if (ob.getRectangle().right <= 0) {
-                if (ob instanceof SnakeObstacle) {
-                    obstacles.add(0, initialisationSnakeObstacle(ConstantsSnakeObstacle.OBSTACLE_LEFT, ConstantsSnakeObstacle.OBSTACLE_TOP, ConstantsSnakeObstacle.OBSTACLE_RIGHT, ConstantsSnakeObstacle.OBSTACLE_BOTTOM));
-                } else if (ob instanceof BatObstacle) {
-                    obstacles.add(0, initialisationBatObstacle(ConstantsBatObstacle.OBSTACLE_LEFT, ConstantsBatObstacle.OBSTACLE_TOP, ConstantsBatObstacle.OBSTACLE_RIGHT, ConstantsBatObstacle.OBSTACLE_BOTTOM));
-                }
                 obstacles.remove(ob);
-                score++;
             }
         }
     }
@@ -111,10 +91,5 @@ public class ObstacleManager {
         {
             ob.draw(canvas);
         }
-        Paint paint = new Paint() ;
-        paint.setTextSize(100) ;
-        paint.setColor(Color.MAGENTA);
-        /* distance entre le haut du paint et la bas du paint */
-        canvas.drawText("" + score, 50 + paint.descent() - paint.ascent() , 50 + paint.descent() - paint.ascent() , paint);
     }
 }

@@ -12,25 +12,27 @@ import android.view.MotionEvent;
 public class GamePlayScene implements Scene {
 
     /* Zone pour l'affichage de l'erreur */
-    private Rect text_gameover = new Rect();
+    private Rect message = new Rect();
     private RectPlayer player ;
     private Point playerPoint ;
     private ObstacleManager obstacleManager ;
     private boolean movingPlayer = false ;
     private boolean gameOver = false ;
-    private long gameOverTime ;
+    private boolean win = false;
     private long frameTime ; /* vitesse du bonhomme */
     private Bitmap mScaledBackground;
     private boolean actionDown;
+    private int attempt;
 
     GamePlayScene()
     {
         player = new RectPlayer(new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER), 1, -30);
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
-        obstacleManager = new ObstacleManager();
+        obstacleManager = new ObstacleManager(1);
         this.actionDown = false;
         frameTime = System.currentTimeMillis() ;
+        this.attempt = 0;
         Bitmap mBackground = BitmapFactory.decodeResource(Constants.CURRENT_CONTEXT.getResources(), R.drawable.background_space);
         this.mScaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
     }
@@ -38,13 +40,12 @@ public class GamePlayScene implements Scene {
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
         player.setCurrentSpeed(true);
-        obstacleManager = new ObstacleManager();
+        obstacleManager = new ObstacleManager(1);
         movingPlayer = false ;
-
     }
     @Override
     public void update() {
-        if (!gameOver) {
+        if ((!gameOver) && (!win)) {
             if (frameTime < Constants.INIT_TIME) {
                 frameTime = Constants.INIT_TIME;
             }
@@ -62,8 +63,13 @@ public class GamePlayScene implements Scene {
             obstacleManager.update();
 
             if (obstacleManager.playerCollide(player)) {
+                this.attempt++;
                 gameOver = true;
-                gameOverTime = System.currentTimeMillis();
+            }
+
+            if (obstacleManager.size() == 0) {
+                this.attempt = 0;
+                win = true;
             }
         }
     }
@@ -71,17 +77,29 @@ public class GamePlayScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-        Rect src = new Rect(0, 0, mScaledBackground.getWidth() - 1, mScaledBackground.getHeight() - 1);
-        Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
-        canvas.drawBitmap(mScaledBackground, src, dest, null);
-        player.draw(canvas);
-        obstacleManager.draw(canvas);
-        if (gameOver)
+        if ((gameOver) || (win))
         {
             Paint paint = new Paint() ;
             paint.setTextSize(100);
-            paint.setColor(Color.MAGENTA);
-            drawCenterText(canvas, paint);
+            if (gameOver) {
+                paint.setColor(Color.RED);
+                drawCenterText("GameOver!", canvas, paint);
+            } else {
+                paint.setColor(Color.GREEN);
+                drawCenterText("Gagné!", canvas, paint);
+            }
+        } else {
+
+            Rect src = new Rect(0, 0, mScaledBackground.getWidth() - 1, mScaledBackground.getHeight() - 1);
+            Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
+            canvas.drawBitmap(mScaledBackground, src, dest, null);
+            player.draw(canvas);
+            obstacleManager.draw(canvas);
+            Paint paintAttempt = new Paint();
+            paintAttempt.setTextSize(100);
+            paintAttempt.setColor(Color.MAGENTA);
+            canvas.drawText("Tentative n°" + this.attempt, 50 + paintAttempt.descent() - paintAttempt.ascent(), 50 + paintAttempt.descent() - paintAttempt.ascent(), paintAttempt);
+
         }
     }
 
@@ -103,28 +121,30 @@ public class GamePlayScene implements Scene {
         if (this.actionDown)
         {
                 /* Si le joueur n'a pas perdu et appuie dans le rectangle */
-                if ( (!gameOver) && (!movingPlayer) )
+            if ((!gameOver) && (!movingPlayer) && (!win))
                 {
                     movingPlayer = true ;
                 }
                 /* On veut que l'ecran de game over reste 2 sec a l'écran */
-                if (gameOver && System.currentTimeMillis() - gameOverTime >= 2000)
+            if (gameOver)
                 {
                     reset() ;
                     gameOver = false ;
-                }
+                } else if (win) {
+                reset();
+                win = false;
+            }
         }
     }
 
-    private void drawCenterText(Canvas canvas, Paint paint) {
-        String text = "GameOver !";
+    private void drawCenterText(String text, Canvas canvas, Paint paint) {
         paint.setTextAlign(Paint.Align.LEFT);
-        canvas.getClipBounds(text_gameover);
-        int cHeight = text_gameover.height();
-        int cWidth = text_gameover.width();
-        paint.getTextBounds(text, 0, text.length(), text_gameover);
-        float x = cWidth / 2f - text_gameover.width() / 2f - text_gameover.left;
-        float y = cHeight / 2f + text_gameover.height() / 2f - text_gameover.bottom;
+        canvas.getClipBounds(message);
+        int cHeight = message.height();
+        int cWidth = message.width();
+        paint.getTextBounds(text, 0, text.length(), message);
+        float x = cWidth / 2f - message.width() / 2f - message.left;
+        float y = cHeight / 2f + message.height() / 2f - message.bottom;
         canvas.drawText(text, x, y, paint);
     }
 }

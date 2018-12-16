@@ -38,7 +38,7 @@ public class RectPlayer implements GameObject {
 
         Animation jump = new Animation(new Bitmap[]{scaledJump}, 2);
         Animation gravity = new Animation(new Bitmap[]{scaledGravity}, 2);
-        Animation walkRight = new Animation(new Bitmap[]{scaledWalk1, scaledWalk2}, 0.5f);
+        Animation walkRight = new Animation(new Bitmap[]{scaledWalk1, scaledWalk2}, 0.25f);
 
         animationManager = new AnimationManager(new Animation[]{walkRight, jump, gravity});
     }
