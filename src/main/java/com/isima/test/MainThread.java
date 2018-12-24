@@ -36,16 +36,16 @@ class MainThread extends Thread {
         /* A chaque while, on cree une frame */
         while(running)
         {
-            current = System.currentTimeMillis();
+            Canvas canvas = null;
+           /* current = System.currentTimeMillis();
             elapsed = current - previous ;
             previous = current ;
             lag += elapsed ;
-            Canvas canvas = null;
             while (lag >= MS_PER_UPDATE)
             {
                 this.gamePanel.update();
                 lag -= MS_PER_UPDATE ;
-            }
+            }*/
             try
             {
                 canvas = this.surfaceHolder.lockCanvas() ; /* Le canvas pourra etre modifier */
@@ -53,6 +53,8 @@ class MainThread extends Thread {
                 /* synchronized permet d'attendre la fin de ce thread pour lancer la suite */
                 synchronized (surfaceHolder)
                 {
+                    this.gamePanel.update();
+
                     /* Section Critique : si on a pas fini d'afficher le surface holder a temps N, on peut pas commencer a traiter les donner du frame N+1 */
                     this.gamePanel.draw(canvas) ;
                 }
