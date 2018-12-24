@@ -1,0 +1,16 @@
+{
+  "buildFiles": [
+    "C:\\Users\\Dimitri\\StudioProjects\\Projet_Geometry_Dash-1bebe6b772784da02413506986fb61b2aa9b08ce\\app\\CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "C:\\Users\\Dimitri\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Dimitri\\StudioProjects\\Projet_Geometry_Dash-1bebe6b772784da02413506986fb61b2aa9b08ce\\app\\.externalNativeBuild\\cmake\\debug\\arm64-v8a --target clean"
+  ],
+  "libraries": {
+    "native-lib-Debug-arm64-v8a": {
+      "artifactName": "native-lib",
+      "buildCommand": "C:\\Users\\Dimitri\\AppData\\Local\\Android\\Sdk\\cmake\\3.6.4111459\\bin\\cmake.exe --build C:\\Users\\Dimitri\\StudioProjects\\Projet_Geometry_Dash-1bebe6b772784da02413506986fb61b2aa9b08ce\\app\\.externalNativeBuild\\cmake\\debug\\arm64-v8a --target native-lib",
+      "abi": "arm64-v8a",
+      "output": "C:\\Users\\Dimitri\\StudioProjects\\Projet_Geometry_Dash-1bebe6b772784da02413506986fb61b2aa9b08ce\\app\\build\\intermediates\\cmake\\debug\\obj\\arm64-v8a\\libnative-lib.so"
+    }
+  }
+}
