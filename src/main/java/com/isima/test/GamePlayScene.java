@@ -25,6 +25,8 @@ public class GamePlayScene implements Scene {
     private boolean actionDown;
     private int attempt;
     private Context context ;
+    private long gameOverTime ;
+    private boolean flagGameOverTime ;
 
     GamePlayScene(Context context)
     {
@@ -80,29 +82,45 @@ public class GamePlayScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
+        Rect src = new Rect(0, 0, mScaledBackground.getWidth() - 1, mScaledBackground.getHeight() - 1);
+        Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
+        canvas.drawBitmap(mScaledBackground, src, dest, null);
+        player.draw(canvas);
+        obstacleManager.draw(canvas);
+        Paint paintAttempt = new Paint();
+        paintAttempt.setTextSize(100);
+        paintAttempt.setColor(Color.MAGENTA);
+        canvas.drawText("Tentative n°" + this.attempt, 50 + paintAttempt.descent() - paintAttempt.ascent(), 50 + paintAttempt.descent() - paintAttempt.ascent(), paintAttempt);
+
         if ((gameOver) || (win))
         {
-            Paint paint = new Paint() ;
-            paint.setTextSize(100);
-            if (gameOver) {
-                paint.setColor(Color.RED);
-                drawCenterText("GameOver!", canvas, paint);
-            } else {
-                paint.setColor(Color.GREEN);
-                drawCenterText("Gagné!", canvas, paint);
+            if (flagGameOverTime)
+            {
+                if (System.currentTimeMillis() - gameOverTime > 1000)
+                {
+                    reset();
+                    win = false;
+                    gameOver = false ;
+                    flagGameOverTime = false ;
+                }
+                else
+                {
+                    Paint paint = new Paint() ;
+                    paint.setTextSize(100);
+                    if (gameOver) {
+                        paint.setColor(Color.RED);
+                        drawCenterText("GameOver! Retry", canvas, paint);
+                    } else {
+                        paint.setColor(Color.GREEN);
+                        drawCenterText("Gagné!", canvas, paint);
+                    }
+                }
             }
-        } else {
-
-            Rect src = new Rect(0, 0, mScaledBackground.getWidth() - 1, mScaledBackground.getHeight() - 1);
-            Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
-            canvas.drawBitmap(mScaledBackground, src, dest, null);
-            player.draw(canvas);
-            obstacleManager.draw(canvas);
-            Paint paintAttempt = new Paint();
-            paintAttempt.setTextSize(100);
-            paintAttempt.setColor(Color.MAGENTA);
-            canvas.drawText("Tentative n°" + this.attempt, 50 + paintAttempt.descent() - paintAttempt.ascent(), 50 + paintAttempt.descent() - paintAttempt.ascent(), paintAttempt);
-
+            else
+            {
+                flagGameOverTime = true ;
+                gameOverTime = System.currentTimeMillis() ;
+            }
         }
     }
 
@@ -114,29 +132,15 @@ public class GamePlayScene implements Scene {
     @Override
 
     public void recieveTouch(MotionEvent event) {
-        /* getAction : bouton relache ? appuye ? bouge */
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             this.actionDown = true;
         }
-        if (event.getAction() == MotionEvent.ACTION_UP) {
+        else if (event.getAction() == MotionEvent.ACTION_UP) {
             this.actionDown = false;
         }
-        if (this.actionDown)
+        if ((!gameOver) && (!movingPlayer) && (!win) && (actionDown))
         {
-                /* Si le joueur n'a pas perdu et appuie dans le rectangle */
-            if ((!gameOver) && (!movingPlayer) && (!win))
-                {
-                    movingPlayer = true ;
-                }
-                /* On veut que l'ecran de game over reste 2 sec a l'écran */
-            if (gameOver)
-                {
-                    reset() ;
-                    gameOver = false ;
-                } else if (win) {
-                reset();
-                win = false;
-            }
+            movingPlayer = true ;
         }
     }
 
