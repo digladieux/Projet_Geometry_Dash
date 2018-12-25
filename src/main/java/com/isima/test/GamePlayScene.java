@@ -50,6 +50,10 @@ public class GamePlayScene implements Scene {
     }
     @Override
     public void update() {
+        if ((!gameOver) && (!movingPlayer) && (!win) && (actionDown))
+        {
+            movingPlayer = true ;
+        }
         if ((!gameOver) && (!win)) {
             if (frameTime < Constants.INIT_TIME) {
                 frameTime = Constants.INIT_TIME;
@@ -137,10 +141,6 @@ public class GamePlayScene implements Scene {
         }
         else if (event.getAction() == MotionEvent.ACTION_UP) {
             this.actionDown = false;
-        }
-        if ((!gameOver) && (!movingPlayer) && (!win) && (actionDown))
-        {
-            movingPlayer = true ;
         }
     }
 
