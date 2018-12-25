@@ -13,7 +13,7 @@ import android.view.MotionEvent;
 public class GamePlayScene implements Scene {
 
     /* Zone pour l'affichage de l'erreur */
-    private final Rect message = new Rect();
+    static int mapNumber = 0 ;
     private final RectPlayer player;
     private Point playerPoint ;
     private ObstacleManager obstacleManager ;
@@ -34,7 +34,7 @@ public class GamePlayScene implements Scene {
         player = new RectPlayer(context, new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER));
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
-        obstacleManager = new ObstacleManager(context, 1);
+        obstacleManager = new ObstacleManager(context, mapNumber);
         this.actionDown = false;
         frameTime = System.currentTimeMillis() ;
         this.attempt = 0;
@@ -45,7 +45,7 @@ public class GamePlayScene implements Scene {
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
         player.setCurrentSpeed(true);
-        obstacleManager = new ObstacleManager(context,1);
+        obstacleManager = new ObstacleManager(context,mapNumber);
         movingPlayer = false ;
     }
     @Override
@@ -76,7 +76,7 @@ public class GamePlayScene implements Scene {
                 gameOver = true;
             }
 
-            if (obstacleManager.size() == 0) {
+            if (obstacleManager.size() < 4) {
                 this.attempt = 0;
                 win = true;
             }
@@ -113,10 +113,10 @@ public class GamePlayScene implements Scene {
                     paint.setTextSize(100);
                     if (gameOver) {
                         paint.setColor(Color.RED);
-                        drawCenterText("GameOver! Retry", canvas, paint);
+                        paint.setTextAlign(Paint.Align.CENTER);
+                        canvas.drawText("GameOver! Retry", Constants.SCREEN_WIDTH/2, Constants.SCREEN_HEIGHT/2, paint);
                     } else {
-                        paint.setColor(Color.GREEN);
-                        drawCenterText("Gagné!", canvas, paint);
+                        this.terminate();
                     }
                 }
             }
@@ -130,7 +130,7 @@ public class GamePlayScene implements Scene {
 
     @Override
     public void terminate() {
-        SceneManager.ACTIVE_SCENE = 1;
+        SceneManager.ACTIVE_SCENE = 3;
     }
 
     @Override
@@ -142,16 +142,5 @@ public class GamePlayScene implements Scene {
         else if (event.getAction() == MotionEvent.ACTION_UP) {
             this.actionDown = false;
         }
-    }
-
-    private void drawCenterText(String text, Canvas canvas, Paint paint) {
-        paint.setTextAlign(Paint.Align.LEFT);
-        canvas.getClipBounds(message);
-        int cHeight = message.height();
-        int cWidth = message.width();
-        paint.getTextBounds(text, 0, text.length(), message);
-        float x = cWidth / 2f - message.width() / 2f - message.left;
-        float y = cHeight / 2f + message.height() / 2f - message.bottom;
-        canvas.drawText(text, x, y, paint);
     }
 }

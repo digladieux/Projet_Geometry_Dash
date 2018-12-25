@@ -14,7 +14,11 @@ class SceneManager {
     SceneManager(Context context)
     {
         ACTIVE_SCENE = 0 ;
+        scenes.add(new MenuScene(context)) ;
+        scenes.add(new MapScene(context)) ;
         scenes.add(new GamePlayScene(context)) ;
+        scenes.add(new WiningScene(context)) ;
+
     }
 
     void receiveTouch(MotionEvent event)
