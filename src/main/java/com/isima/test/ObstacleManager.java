@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 class ObstacleManager {
-    private final ArrayList <Obstacles> obstacles;
-    private long startTime ; /* debut frame */
+    private final ArrayList <Obstacle> obstacles;
+    private long startTime ; /* debut frame */ /*todo : utile ? */
     private final long initTime; /* debut jeu */
 
     ObstacleManager(Context context, int map)
@@ -21,10 +21,10 @@ class ObstacleManager {
     }
 
 
-    boolean playerCollide(RectPlayer player)
+    boolean playerCollide(AlienSprite player)
     {
         boolean collision = false;
-        for (Obstacles ob : obstacles) {
+        for (Obstacle ob : obstacles) {
             if (ob.playerCollide(player)) {
                 collision = true;
             }
@@ -44,10 +44,10 @@ class ObstacleManager {
         float speedBat = (float) (Math.sqrt(1 + (startTime - initTime) / 3000.0)) * Constants.SCREEN_HEIGHT / 3000.0f;
         float speedMonster = (float) (Math.sqrt(1 + (startTime - initTime) / 5000.0)) * Constants.SCREEN_HEIGHT / 5000.0f;
 
-        Iterator <Obstacles> it = obstacles.iterator();
+        Iterator <Obstacle> it = obstacles.iterator();
         while (it.hasNext())
         {
-            Obstacles ob = it.next();
+            Obstacle ob = it.next();
             if (ob instanceof BatObstacle) {
                 ob.incrementX(speedBat * elapsedTime);
             } else {
@@ -63,7 +63,7 @@ class ObstacleManager {
     public void draw(Canvas canvas)
     {
         /* for each obstacle */
-        for (Obstacles ob : obstacles)
+        for (Obstacle ob : obstacles)
         {
             ob.draw(canvas);
         }

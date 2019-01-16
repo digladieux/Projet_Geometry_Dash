@@ -4,13 +4,13 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-class BatObstacle extends Obstacles {
+class BatObstacle extends Obstacle {
 
     private BatObstacle(Bitmap movement_right, Bitmap movement_left, int area_left, int area_top, int area_right, int area_bottom) {
         super(movement_right, movement_left, area_left, area_top, area_right, area_bottom);
     }
 
-    static Obstacles initialisationBatObstacle(Context context, int area_left, int area_top, int area_right, int area_bottom) {
+    static Obstacle initialisationBatObstacle(Context context, int area_left, int area_top, int area_right, int area_bottom) {
         Bitmap movement_left = BitmapFactory.decodeResource(context.getResources(), R.drawable.bat);
         Bitmap movement_right = BitmapFactory.decodeResource(context.getResources(), R.drawable.bat_fly);
         Bitmap scaledMovementLeft = Bitmap.createScaledBitmap(movement_left, ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_HEIGHT, true);

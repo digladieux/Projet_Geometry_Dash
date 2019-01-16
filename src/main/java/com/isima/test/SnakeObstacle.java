@@ -5,13 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
-class SnakeObstacle extends Obstacles {
+class SnakeObstacle extends Obstacle {
 
     private SnakeObstacle(Bitmap movement_right, Bitmap movement_left, int area_left, int area_top, int area_right, int area_bottom) {
         super(movement_right, movement_left, area_left, area_top, area_right, area_bottom);
     }
 
-    static Obstacles initialisationSnakeObstacle(Context context, int area_left, int area_top, int area_right, int area_bottom) {
+    static Obstacle initialisationSnakeObstacle(Context context, int area_left, int area_top, int area_right, int area_bottom) {
         Bitmap movement_left = BitmapFactory.decodeResource(context.getResources(), R.drawable.snake_slime);
         Bitmap scaledMovementLeft = Bitmap.createScaledBitmap(movement_left, ConstantsSnakeObstacle.OBSTACLE_WIDTH, ConstantsSnakeObstacle.OBSTACLE_HEIGHT, true);
 

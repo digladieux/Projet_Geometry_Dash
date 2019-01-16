@@ -7,7 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-class RectPlayer {
+class AlienSprite {
 
     /* Classe de android studio toute faite RECT */
     private final Rect rectangle;
@@ -16,7 +16,7 @@ class RectPlayer {
     private final int initSpeed;
     private int currentSpeed;
 
-    RectPlayer(Context context, Rect rectangle)
+    AlienSprite(Context context, Rect rectangle)
     {
         this.rectangle = rectangle ;
 

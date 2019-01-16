@@ -11,23 +11,31 @@ import android.view.MotionEvent;
 
 public class WiningScene implements Scene {
 
-    private final Bitmap mScaledBackground;
+    private final Bitmap scaledBackground;
+    private long winningTime;
 
     WiningScene(Context context)
     {
         Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_menu);
-        this.mScaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
+        this.scaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
     }
     @Override
     public void update() {
-
+        if (System.currentTimeMillis() - winningTime > 10000)
+        {
+            winningTime = System.currentTimeMillis();
+        }
+        else if (System.currentTimeMillis() - winningTime > 2000)
+        {
+            this.terminate();
+        }
     }
 
     @Override
     public void draw(Canvas canvas) {
-        Rect src = new Rect(0, 0, mScaledBackground.getWidth() - 1, mScaledBackground.getHeight() - 1);
+        Rect src = new Rect(0, 0, scaledBackground.getWidth() - 1, scaledBackground.getHeight() - 1);
         Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
-        canvas.drawBitmap(mScaledBackground, src, dest, null);
+        canvas.drawBitmap(scaledBackground, src, dest, null);
         Paint paintMenu = new Paint();
         paintMenu.setTextSize(100);
         paintMenu.setColor(Color.GREEN);

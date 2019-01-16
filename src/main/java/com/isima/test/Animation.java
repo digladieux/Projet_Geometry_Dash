@@ -7,20 +7,20 @@ import android.graphics.Rect;
 
 class Animation {
 
-    private final Bitmap[] frames;
-    private int frameIndex ;
+    private final Bitmap[] pictures;
+    private int pictureIndex;
 
     private boolean isPLaying = false;
-    private final float frameTime; /* temps entre les frame */
-    private long lastFrame;
+    private final float pictureTime; /* temps entre les frame */
+    private long currentTimePicture;
 
-    Animation(Bitmap[] frames, float animTime) {
-        this.frames = frames ;
-        frameIndex = 0 ;
+    Animation(Bitmap[] pictures, float animTime) {
+        this.pictures = pictures;
+        pictureIndex = 0 ;
         /* animTime temps total de animation et on les egalise */
-        frameTime = animTime/frames.length ;
+        pictureTime = animTime/ pictures.length ;
 
-        lastFrame = System.currentTimeMillis();
+        currentTimePicture = System.currentTimeMillis();
     }
 
     boolean isPLaying() {
@@ -28,9 +28,9 @@ class Animation {
     }
 
     void play() {
-        frameIndex = 0;
+        pictureIndex = 0;
         isPLaying = true;
-        lastFrame = System.currentTimeMillis();
+        currentTimePicture = System.currentTimeMillis();
     }
 
     void stop() {
@@ -39,26 +39,18 @@ class Animation {
 
     public void draw(Canvas canvas, Rect destination)
     {
-        /* drawBitmat prend une bitmap, la proportion de l'image que l'on veut prendre (rogner ou pas ?), le rectangle où on va afficher la bitmap et le dessin */
-        if (!isPLaying) {
-            return;
+        if (isPLaying) {
+            canvas.drawBitmap(pictures[pictureIndex], null, destination, new Paint());
         }
-        /* Une image s'adapte parfaitement a sa destination. Pour eviter d'etirer l'image, on la met a l'echelle pour qu'elle conserve sa taille */
-        canvas.drawBitmap(frames[frameIndex], null, destination, new Paint());
     }
 
     public void update()
     {
-        if (!isPLaying)
+        if ((isPLaying) && (System.currentTimeMillis() - currentTimePicture > pictureTime *1000))
         {
-            return ;
-        }
-        /* Si l'anim a depasse son temps d'etre a l'ecran on change */
-        if (System.currentTimeMillis() - lastFrame > frameTime*1000)
-        {
-            frameIndex ++ ;
-            frameIndex = frameIndex >= frames.length ? 0 : frameIndex ;
-            lastFrame = System.currentTimeMillis() ;
+                pictureIndex++ ;
+                pictureIndex = pictureIndex >= pictures.length ? 0 : pictureIndex;
+                currentTimePicture = System.currentTimeMillis() ;
         }
     }
 }

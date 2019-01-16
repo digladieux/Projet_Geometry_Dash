@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 final class Map {
 
-    static ArrayList <Obstacles> initialisationMap(Context context, int mapChoice) {
+    static ArrayList <Obstacle> initialisationMap(Context context, int mapChoice) {
         switch (mapChoice) {
             case 0:
                 return initialisationMap0(context);
@@ -23,14 +23,14 @@ final class Map {
         }
     }
 
-    static private ArrayList <Obstacles> initialisationMap0(Context context) {
-        ArrayList <Obstacles> level = new ArrayList <>();
+    static private ArrayList <Obstacle> initialisationMap0(Context context) {
+        ArrayList <Obstacle> level = new ArrayList <>();
         level.add(GroundObstacle.initialisationGroundObstacle(context,0, ConstantsGroundObstacle.OBSTACLE_TOP, ConstantsGroundObstacle.OBSTACLE_WIDTH, ConstantsGroundObstacle.OBSTACLE_BOTTOM));
         return level;
     }
 
-    static private ArrayList <Obstacles> initialisationMap1(Context context) {
-        ArrayList <Obstacles> level = new ArrayList <>();
+    static private ArrayList <Obstacle> initialisationMap1(Context context) {
+        ArrayList <Obstacle> level = new ArrayList <>();
 
         level.add(SnakeObstacle.initialisationSnakeObstacle(context, Constants.SCREEN_WIDTH / 2, ConstantsSnakeObstacle.OBSTACLE_TOP, Constants.SCREEN_WIDTH/2 + ConstantsSnakeObstacle.OBSTACLE_WIDTH, ConstantsSnakeObstacle.OBSTACLE_BOTTOM));
 
@@ -42,8 +42,8 @@ final class Map {
         return level;
     }
 
-    static private ArrayList <Obstacles> initialisationMap2(Context context) {
-        ArrayList <Obstacles> level = new ArrayList <>();
+    static private ArrayList <Obstacle> initialisationMap2(Context context) {
+        ArrayList <Obstacle> level = new ArrayList <>();
 
         level.add(BatObstacle.initialisationBatObstacle(context,Constants.SCREEN_WIDTH / 2, ConstantsBatObstacle.OBSTACLE_TOP, Constants.SCREEN_WIDTH / 2 + ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_BOTTOM));
 
@@ -55,8 +55,8 @@ final class Map {
         return level;
     }
 
-    static private ArrayList <Obstacles> initialisationMap3(Context context) {
-        ArrayList <Obstacles> level = new ArrayList <>();
+    static private ArrayList <Obstacle> initialisationMap3(Context context) {
+        ArrayList <Obstacle> level = new ArrayList <>();
 
         level.add(SnakeObstacle.initialisationSnakeObstacle(context, Constants.SCREEN_WIDTH/2, ConstantsSnakeObstacle.OBSTACLE_TOP, Constants.SCREEN_WIDTH/2 + ConstantsSnakeObstacle.OBSTACLE_WIDTH, ConstantsSnakeObstacle.OBSTACLE_BOTTOM));
         level.add(BatObstacle.initialisationBatObstacle(context,Constants.SCREEN_WIDTH / 2, ConstantsBatObstacle.OBSTACLE_TOP, Constants.SCREEN_WIDTH / 2 + ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_BOTTOM));
@@ -68,8 +68,8 @@ final class Map {
         return level;
     }
 
-    static private ArrayList <Obstacles> initialisationMap4(Context context) {
-        ArrayList <Obstacles> level = new ArrayList <>();
+    static private ArrayList <Obstacle> initialisationMap4(Context context) {
+        ArrayList <Obstacle> level = new ArrayList <>();
 
         level.add(SnakeObstacle.initialisationSnakeObstacle(context, Constants.SCREEN_WIDTH/4, ConstantsSnakeObstacle.OBSTACLE_TOP, Constants.SCREEN_WIDTH/4 + ConstantsSnakeObstacle.OBSTACLE_WIDTH, ConstantsSnakeObstacle.OBSTACLE_BOTTOM));
         level.add(BatObstacle.initialisationBatObstacle(context,Constants.SCREEN_WIDTH /4, ConstantsBatObstacle.OBSTACLE_TOP, Constants.SCREEN_WIDTH /4 + ConstantsBatObstacle.OBSTACLE_WIDTH, ConstantsBatObstacle.OBSTACLE_BOTTOM));

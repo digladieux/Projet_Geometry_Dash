@@ -10,28 +10,30 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 
-public class GamePlayScene implements Scene {
+public class GameScene implements Scene {
 
     /* Zone pour l'affichage de l'erreur */
     static int mapNumber = 0 ;
-    private final RectPlayer player;
+    private final AlienSprite player;
     private Point playerPoint ;
     private ObstacleManager obstacleManager ;
     private boolean movingPlayer = false ;
     private boolean gameOver = false ;
     private boolean win = false;
     private long frameTime ; /* vitesse du bonhomme */
-    private final Bitmap mScaledBackground;
+    private final Bitmap scaledBackground;
     private boolean actionDown;
     private int attempt;
     private Context context ;
     private long gameOverTime ;
     private boolean flagGameOverTime ;
+    private boolean gameNotStarted ;
 
-    GamePlayScene(Context context)
+    GameScene(Context context)
     {
         this.context = context ;
-        player = new RectPlayer(context, new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER));
+        this.gameNotStarted = true ;
+        player = new AlienSprite(context, new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER));
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
         obstacleManager = new ObstacleManager(context, mapNumber);
@@ -39,7 +41,7 @@ public class GamePlayScene implements Scene {
         frameTime = System.currentTimeMillis() ;
         this.attempt = 0;
         Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_space);
-        this.mScaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
+        this.scaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
     }
     private void reset() {
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
@@ -50,35 +52,41 @@ public class GamePlayScene implements Scene {
     }
     @Override
     public void update() {
-        if ((!gameOver) && (!movingPlayer) && (!win) && (actionDown))
+        if (gameNotStarted)
         {
-            movingPlayer = true ;
+            gameNotStarted = false ;
+            reset();
         }
-        if ((!gameOver) && (!win)) {
-            if (frameTime < Constants.INIT_TIME) {
-                frameTime = Constants.INIT_TIME;
+        else {
+            if ((!gameOver) && (!movingPlayer) && (!win) && (actionDown)) {
+                movingPlayer = true;
             }
-            frameTime = System.currentTimeMillis();
-            if (movingPlayer) {
-                player.setCurrentSpeed(false);
-                playerPoint.y += player.getCurrentSpeed();
-                if (playerPoint.y == PlayerConstants.INIT_POSITION_Y) {
-                    movingPlayer = false;
-                    player.setCurrentSpeed(true);
+            if ((!gameOver) && (!win)) {
+                if (frameTime < Constants.INIT_TIME) {
+                    frameTime = Constants.INIT_TIME;
                 }
-            }
+                frameTime = System.currentTimeMillis();
+                if (movingPlayer) {
+                    player.setCurrentSpeed(false);
+                    playerPoint.y += player.getCurrentSpeed();
+                    if (playerPoint.y == PlayerConstants.INIT_POSITION_Y) {
+                        movingPlayer = false;
+                        player.setCurrentSpeed(true);
+                    }
+                }
 
-            player.update(playerPoint);
-            obstacleManager.update();
+                player.update(playerPoint);
+                obstacleManager.update();
 
-            if (obstacleManager.playerCollide(player)) {
-                this.attempt++;
-                gameOver = true;
-            }
+                if (obstacleManager.playerCollide(player)) {
+                    this.attempt++;
+                    gameOver = true;
+                }
 
-            if (obstacleManager.size() < 4) {
-                this.attempt = 0;
-                win = true;
+                if (obstacleManager.size() < 4) {
+                    this.attempt = 0;
+                    win = true;
+                }
             }
         }
     }
@@ -86,9 +94,9 @@ public class GamePlayScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-        Rect src = new Rect(0, 0, mScaledBackground.getWidth() - 1, mScaledBackground.getHeight() - 1);
+        Rect src = new Rect(0, 0, scaledBackground.getWidth() - 1, scaledBackground.getHeight() - 1);
         Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
-        canvas.drawBitmap(mScaledBackground, src, dest, null);
+        canvas.drawBitmap(scaledBackground, src, dest, null);
         player.draw(canvas);
         obstacleManager.draw(canvas);
         Paint paintAttempt = new Paint();
