@@ -54,12 +54,14 @@ class AlienSprite {
     }
 
 
-    void setCurrentSpeed(boolean reset) {
-        if (reset) {
-            this.currentSpeed = this.initSpeed;
-        } else {
-            this.currentSpeed += velocity;
-        }
+    void resetCurrentSpeed()
+    {
+        this.currentSpeed = this.initSpeed;
+    }
+
+    void incrementCurrentSpeed()
+    {
+        this.currentSpeed += velocity;
     }
 
     public void draw(Canvas canvas) {

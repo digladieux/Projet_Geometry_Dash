@@ -38,7 +38,6 @@ public class GameScene implements Scene {
         player.update(playerPoint) ;
         obstacleManager = new ObstacleManager(context, mapNumber);
         this.actionDown = false;
-        frameTime = System.currentTimeMillis() ;
         this.attempt = 0;
         Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_space);
         this.scaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
@@ -46,10 +45,11 @@ public class GameScene implements Scene {
     private void reset() {
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
-        player.setCurrentSpeed(true);
+        player.resetCurrentSpeed();
         obstacleManager = new ObstacleManager(context,mapNumber);
         movingPlayer = false ;
     }
+
     @Override
     public void update() {
         if (gameNotStarted)
@@ -62,16 +62,12 @@ public class GameScene implements Scene {
                 movingPlayer = true;
             }
             if ((!gameOver) && (!win)) {
-                if (frameTime < Constants.INIT_TIME) {
-                    frameTime = Constants.INIT_TIME;
-                }
-                frameTime = System.currentTimeMillis();
                 if (movingPlayer) {
-                    player.setCurrentSpeed(false);
+                    player.incrementCurrentSpeed();
                     playerPoint.y += player.getCurrentSpeed();
                     if (playerPoint.y == PlayerConstants.INIT_POSITION_Y) {
                         movingPlayer = false;
-                        player.setCurrentSpeed(true);
+                        player.resetCurrentSpeed();
                     }
                 }
 

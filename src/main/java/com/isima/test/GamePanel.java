@@ -63,10 +63,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
-    /* MotionEvent : Capture les evenements de l'utilisateur */
-    /* Quand l'utilisateur rester appuye sur l'ecran */
-
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         manager.receiveTouch(event) ;
