@@ -14,24 +14,29 @@ public class GameScene implements Scene {
 
     /* Zone pour l'affichage de l'erreur */
     static int mapNumber = 0 ;
+    private final Bitmap scaledBackground;
+    private final Bitmap scaledReturnMenu;
+    private final Bitmap scaledBackgroundAttempt ;
     private final AlienSprite player;
     private Point playerPoint ;
     private ObstacleManager obstacleManager ;
+
     private boolean movingPlayer = false ;
     private boolean gameOver = false ;
     private boolean win = false;
-    private long frameTime ; /* vitesse du bonhomme */
-    private final Bitmap scaledBackground;
     private boolean actionDown;
+    private boolean flagGameOverTime ;
+    private boolean gameNotStarted ;
+    private boolean changingMap;
+
     private int attempt;
     private Context context ;
     private long gameOverTime ;
-    private boolean flagGameOverTime ;
-    private boolean gameNotStarted ;
 
     GameScene(Context context)
     {
         this.context = context ;
+        this.changingMap = false ;
         this.gameNotStarted = true ;
         player = new AlienSprite(context, new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER));
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
@@ -39,15 +44,26 @@ public class GameScene implements Scene {
         obstacleManager = new ObstacleManager(context, mapNumber);
         this.actionDown = false;
         this.attempt = 0;
-        Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_space);
+        Bitmap mReturnMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.return_menu);
+        Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_game);
+        Bitmap mBackgroundAttempt = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_button);
+
+        this.scaledBackgroundAttempt = Bitmap.createScaledBitmap(mBackgroundAttempt, 200, 150, true);
+        this.scaledReturnMenu = Bitmap.createScaledBitmap(mReturnMenu, 100, 100, true);
         this.scaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
     }
     private void reset() {
+        gameOver = false ;
+        win = false ;
+        actionDown = false ;
+        changingMap = false ;
+        movingPlayer = false ;
+
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
         player.update(playerPoint) ;
         player.resetCurrentSpeed();
         obstacleManager = new ObstacleManager(context,mapNumber);
-        movingPlayer = false ;
+
     }
 
     @Override
@@ -65,9 +81,10 @@ public class GameScene implements Scene {
                 if (movingPlayer) {
                     player.incrementCurrentSpeed();
                     playerPoint.y += player.getCurrentSpeed();
-                    if (playerPoint.y == PlayerConstants.INIT_POSITION_Y) {
+                    if (playerPoint.y > PlayerConstants.INIT_POSITION_Y) {
                         movingPlayer = false;
                         player.resetCurrentSpeed();
+                        playerPoint.y = PlayerConstants.INIT_POSITION_Y;
                     }
                 }
 
@@ -90,15 +107,24 @@ public class GameScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-        Rect src = new Rect(0, 0, scaledBackground.getWidth() - 1, scaledBackground.getHeight() - 1);
-        Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
-        canvas.drawBitmap(scaledBackground, src, dest, null);
+        Rect srcBackground = new Rect(0, 0, scaledBackground.getWidth() - 1, scaledBackground.getHeight() - 1);
+        Rect destBackground = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
+        canvas.drawBitmap(scaledBackground, srcBackground, destBackground, null);
+
+        Rect srcReturnMenu = new Rect(0, 0, scaledReturnMenu.getWidth() - 1, scaledReturnMenu.getHeight() - 1);
+        Rect destReturnMenu = new Rect(Constants.SCREEN_WIDTH - 101, 0, Constants.SCREEN_WIDTH - 1, 100);
+        canvas.drawBitmap(scaledReturnMenu, srcReturnMenu, destReturnMenu, null);
+
+
         player.draw(canvas);
         obstacleManager.draw(canvas);
         Paint paintAttempt = new Paint();
         paintAttempt.setTextSize(100);
         paintAttempt.setColor(Color.MAGENTA);
-        canvas.drawText("Tentative n°" + this.attempt, 50 + paintAttempt.descent() - paintAttempt.ascent(), 50 + paintAttempt.descent() - paintAttempt.ascent(), paintAttempt);
+        Rect srcBackgroundAttempt = new Rect(0, 0, scaledBackgroundAttempt.getWidth() - 1, scaledBackgroundAttempt.getHeight() - 1);
+        Rect destBackgroundAttempt = new Rect(50 + (int) paintAttempt.descent() -  (int) paintAttempt.ascent(), 50 + (int) paintAttempt.descent(), 50 + (int)paintAttempt.descent() - (int) paintAttempt.ascent() + (int) paintAttempt.measureText("Attempt n° " + this.attempt), 50 + (int)paintAttempt.descent() + (int)paintAttempt.getTextSize()) ;
+        canvas.drawBitmap(scaledBackgroundAttempt, srcBackgroundAttempt, destBackgroundAttempt, null);
+        canvas.drawText("Attempt n°" + this.attempt, 50 + paintAttempt.descent() - paintAttempt.ascent(), 50 + paintAttempt.descent() - paintAttempt.ascent(), paintAttempt);
 
         if ((gameOver) || (win))
         {
@@ -107,8 +133,6 @@ public class GameScene implements Scene {
                 if (System.currentTimeMillis() - gameOverTime > 1000)
                 {
                     reset();
-                    win = false;
-                    gameOver = false ;
                     flagGameOverTime = false ;
                 }
                 else
@@ -134,13 +158,29 @@ public class GameScene implements Scene {
 
     @Override
     public void terminate() {
-        SceneManager.ACTIVE_SCENE = 3;
+        if (changingMap)
+        {
+            reset();
+            gameNotStarted = true ;
+            SceneManager.ACTIVE_SCENE = 1 ;
+        }
+        else
+        {
+            SceneManager.ACTIVE_SCENE = 3 ;
+        }
     }
 
     @Override
 
     public void recieveTouch(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+        if ((event.getAction() == MotionEvent.ACTION_UP) && (event.getRawX() > Constants.SCREEN_WIDTH - 100) && (event.getRawY() < 100))
+        {
+
+            this.actionDown = false ;
+            changingMap = true ;
+            this.terminate();
+        }
+        else if (event.getAction() == MotionEvent.ACTION_DOWN) {
             this.actionDown = true;
         }
         else if (event.getAction() == MotionEvent.ACTION_UP) {

@@ -16,13 +16,17 @@ public class WiningScene implements Scene {
 
     WiningScene(Context context)
     {
-        Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_menu);
+        Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_winning);
         this.scaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
     }
     @Override
     public void update() {
-        if (System.currentTimeMillis() - winningTime > 10000)
+        if (System.currentTimeMillis() - winningTime > 3000)
         {
+            if (MapScene.mapAvailable == MapScene.activeMap)
+            {
+                MapScene.mapAvailable ++ ;
+            }
             winningTime = System.currentTimeMillis();
         }
         else if (System.currentTimeMillis() - winningTime > 2000)

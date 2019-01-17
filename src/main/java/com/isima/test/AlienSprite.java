@@ -12,9 +12,9 @@ class AlienSprite {
     /* Classe de android studio toute faite RECT */
     private final Rect rectangle;
     private final AnimationManager animationManager;
-    private final int velocity;
-    private final int initSpeed;
-    private int currentSpeed;
+    private final double velocity;
+    private final double initSpeed;
+    private double currentSpeed;
 
     AlienSprite(Context context, Rect rectangle)
     {
@@ -49,7 +49,7 @@ class AlienSprite {
     }
 
 
-    int getCurrentSpeed() {
+    double getCurrentSpeed() {
         return currentSpeed;
     }
 

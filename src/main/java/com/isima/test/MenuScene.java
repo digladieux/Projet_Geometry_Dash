@@ -16,6 +16,7 @@ public class MenuScene implements Scene {
 
     MenuScene(Context context)
     {
+
         menuTime = System.currentTimeMillis();
         Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_menu);
         this.mScaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
