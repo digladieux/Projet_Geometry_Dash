@@ -10,7 +10,7 @@ class Constants
 }
 
 class PlayerConstants {
-    static final double VELOCITY = (Constants.SCREEN_HEIGHT / 1080) * 2;
+    static final double VELOCITY = (Constants.SCREEN_HEIGHT / 1080) * 1.5;
     static final double SPEED = (Constants.SCREEN_HEIGHT / 1080) * -50;
     static final int PLAYER_HEIGHT = (Constants.SCREEN_HEIGHT / 1080) * 186;
     static final int PLAYER_WIDTH = (Constants.SCREEN_WIDTH / 1794) * 132;

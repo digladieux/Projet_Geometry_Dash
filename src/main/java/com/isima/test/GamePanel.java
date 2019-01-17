@@ -2,6 +2,7 @@ package com.isima.test;
 
 /* Ajout des bibliotheques */
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;

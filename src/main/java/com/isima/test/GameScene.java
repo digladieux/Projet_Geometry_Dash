@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 public class GameScene implements Scene {
@@ -33,6 +34,11 @@ public class GameScene implements Scene {
     private Context context ;
     private long gameOverTime ;
 
+    private MediaPlayer gamingMusic ;
+    private MediaPlayer gameOverMusic;
+
+
+
     GameScene(Context context)
     {
         this.context = context ;
@@ -51,8 +57,12 @@ public class GameScene implements Scene {
         this.scaledBackgroundAttempt = Bitmap.createScaledBitmap(mBackgroundAttempt, 200, 150, true);
         this.scaledReturnMenu = Bitmap.createScaledBitmap(mReturnMenu, 100, 100, true);
         this.scaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
+
+        gameOverMusic = MediaPlayer.create(context.getApplicationContext(), R.raw.gameoversong);
+        gamingMusic = MediaPlayer.create(context.getApplicationContext(), R.raw.gamingsong);
     }
     private void reset() {
+        gamingMusic.start();
         gameOver = false ;
         win = false ;
         actionDown = false ;
@@ -94,6 +104,8 @@ public class GameScene implements Scene {
                 if (obstacleManager.playerCollide(player)) {
                     this.attempt++;
                     gameOver = true;
+                    gamingMusic.stop();
+                    gameOverMusic.start();
                 }
 
                 if (obstacleManager.size() < 4) {
@@ -144,6 +156,7 @@ public class GameScene implements Scene {
                         paint.setTextAlign(Paint.Align.CENTER);
                         canvas.drawText("GameOver! Retry", Constants.SCREEN_WIDTH/2, Constants.SCREEN_HEIGHT/2, paint);
                     } else {
+                        gamingMusic.stop();
                         this.terminate();
                     }
                 }

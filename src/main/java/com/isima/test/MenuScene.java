@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 public class MenuScene implements Scene {
@@ -14,9 +15,9 @@ public class MenuScene implements Scene {
     private final Bitmap mScaledBackground;
     private long menuTime ;
 
+
     MenuScene(Context context)
     {
-
         menuTime = System.currentTimeMillis();
         Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_menu);
         this.mScaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);

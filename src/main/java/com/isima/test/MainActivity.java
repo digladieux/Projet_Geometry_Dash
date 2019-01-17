@@ -1,10 +1,12 @@
 package com.isima.test;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
@@ -14,7 +16,6 @@ public class MainActivity extends Activity {
 
         /* Lance une methode de la super classe qui initialise l'activite */
         super.onCreate(savedInstanceState);
-
         /* Recupere la fenetre courant, et met la fenettre en pleine ecran */
         /* FULLSCREEN permet d'ecrire partout dans la fenetre, et d'enlever la barre d'outil */
         /*TODO : essayer avec true ou 1 ou autre en deuxieme argument */
@@ -33,9 +34,11 @@ public class MainActivity extends Activity {
         Constants.SCREEN_WIDTH = dm.widthPixels ;
         Constants.SCREEN_HEIGHT = dm.heightPixels ;
 
+      /*  TextView textView = (TextView) findViewById(R.id.all);
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/SHOWG.TTF");
+        textView.setTypeface(typeface);*/
         /* On modifie l'affichage de l'ecran, pour mettre ce type de fenetre, qu'on definit dans GamePanel */
         setContentView(new GamePanel(this));
-
     }
 }
 
