@@ -11,7 +11,7 @@ class AlienSprite {
 
     /* Classe de android studio toute faite RECT */
     private final Rect rectangle;
-    private final AnimationManager animationManager;
+    private AnimationManager animationManager;
     private final double velocity;
     private final double initSpeed;
     private double currentSpeed;
@@ -24,26 +24,97 @@ class AlienSprite {
         this.initSpeed = PlayerConstants.SPEED;
         this.currentSpeed = initSpeed;
 
-        /* Creer des objet bitmap qui provienne de plusieurs sources differentes ici des fichiers */
-
-        /* On va decoder l'image bitmap, en la recuperant et la mettant dans une image bitmap */
-        Bitmap walk1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienblue_walk1) ;
-        Bitmap walk2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienblue_walk2) ;
-
-        Bitmap jump1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienblue_jump);
-        Bitmap gravity1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienblue_hurt);
-        Bitmap scaledWalk1 = Bitmap.createScaledBitmap(walk1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
-        Bitmap scaledWalk2 = Bitmap.createScaledBitmap(walk2, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
-        Bitmap scaledJump = Bitmap.createScaledBitmap(jump1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
-        Bitmap scaledGravity = Bitmap.createScaledBitmap(gravity1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
-
-        Animation jump = new Animation(new Bitmap[]{scaledJump}, 2);
-        Animation gravity = new Animation(new Bitmap[]{scaledGravity}, 2);
-        Animation walkRight = new Animation(new Bitmap[]{scaledWalk1, scaledWalk2}, 0.25f);
-
-        animationManager = new AnimationManager(new Animation[]{walkRight, jump, gravity});
+        initialisationAnimationSprite(context);
     }
 
+    private void initialisationAnimationSprite(Context context)
+    {
+          /* Creer des objet bitmap qui provienne de plusieurs sources differentes ici des fichiers */
+
+        /* On va decoder l'image bitmap, en la recuperant et la mettant dans une image bitmap */
+        Bitmap walkBlue1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienblue_walk1) ;
+        Bitmap walkBlue2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienblue_walk2) ;
+        Bitmap jumpBlue = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienblue_jump);
+        Bitmap gravityBlue = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienblue_hurt);
+
+        Bitmap scaledWalkBlue1 = Bitmap.createScaledBitmap(walkBlue1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledWalkBlue2 = Bitmap.createScaledBitmap(walkBlue2, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledJumpBlue = Bitmap.createScaledBitmap(jumpBlue, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledGravityBlue = Bitmap.createScaledBitmap(gravityBlue, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+
+        Animation animJumpBlue = new Animation(new Bitmap[]{scaledJumpBlue}, 2);
+        Animation animGravityBlue = new Animation(new Bitmap[]{scaledGravityBlue}, 2);
+        Animation animWalkRightBlue = new Animation(new Bitmap[]{scaledWalkBlue1, scaledWalkBlue2}, 0.25f);
+
+
+        Bitmap walkYellow1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienyellow_walk1) ;
+        Bitmap walkYellow2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienyellow_walk2) ;
+        Bitmap jumpYellow = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienyellow_jump);
+        Bitmap gravityYellow = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienyellow_hurt);
+
+        Bitmap scaledWalkYellow1 = Bitmap.createScaledBitmap(walkYellow1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledWalkYellow2 = Bitmap.createScaledBitmap(walkYellow2, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledJumpYellow = Bitmap.createScaledBitmap(jumpYellow, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledGravityYellow = Bitmap.createScaledBitmap(gravityYellow, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+
+        Animation animJumpYellow = new Animation(new Bitmap[]{scaledJumpYellow}, 2);
+        Animation animGravityYellow = new Animation(new Bitmap[]{scaledGravityYellow}, 2);
+        Animation animWalkRightYellow = new Animation(new Bitmap[]{scaledWalkYellow1, scaledWalkYellow2}, 0.25f);
+
+
+        Bitmap walkGreen1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.aliengreen_walk1) ;
+        Bitmap walkGreen2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.aliengreen_walk2) ;
+        Bitmap jumpGreen = BitmapFactory.decodeResource(context.getResources(), R.drawable.aliengreen_jump);
+        Bitmap gravityGreen = BitmapFactory.decodeResource(context.getResources(), R.drawable.aliengreen_hurt);
+
+        Bitmap scaledWalkGreen1 = Bitmap.createScaledBitmap(walkGreen1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledWalkGreen2 = Bitmap.createScaledBitmap(walkGreen2, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledJumpGreen = Bitmap.createScaledBitmap(jumpGreen, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledGravityGreen = Bitmap.createScaledBitmap(gravityGreen, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+
+        Animation animJumpGreen = new Animation(new Bitmap[]{scaledJumpGreen}, 2);
+        Animation animGravityGreen = new Animation(new Bitmap[]{scaledGravityGreen}, 2);
+        Animation animWalkRightGreen = new Animation(new Bitmap[]{scaledWalkGreen1, scaledWalkGreen2}, 0.25f);
+
+
+        Bitmap walkPink1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienpink_walk1) ;
+        Bitmap walkPink2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienpink_walk2) ;
+        Bitmap jumpPink = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienpink_jump);
+        Bitmap gravityPink = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienpink_hurt);
+
+        Bitmap scaledWalkPink1 = Bitmap.createScaledBitmap(walkPink1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledWalkPink2 = Bitmap.createScaledBitmap(walkPink2, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledJumpPink = Bitmap.createScaledBitmap(jumpPink, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledGravityPink = Bitmap.createScaledBitmap(gravityPink, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+
+        Animation animJumpPink = new Animation(new Bitmap[]{scaledJumpPink}, 2);
+        Animation animGravityPink = new Animation(new Bitmap[]{scaledGravityPink}, 2);
+        Animation animWalkRightPink = new Animation(new Bitmap[]{scaledWalkPink1, scaledWalkPink2}, 0.25f);
+
+
+        Bitmap walkBeige1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienbeige_walk1) ;
+        Bitmap walkBeige2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienbeige_walk2) ;
+        Bitmap jumpBeige = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienbeige_jump);
+        Bitmap gravityBeige = BitmapFactory.decodeResource(context.getResources(), R.drawable.alienbeige_hurt);
+
+        Bitmap scaledWalkBeige1 = Bitmap.createScaledBitmap(walkBeige1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledWalkBeige2 = Bitmap.createScaledBitmap(walkBeige2, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledJumpBeige = Bitmap.createScaledBitmap(jumpBeige, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+        Bitmap scaledGravityBeige = Bitmap.createScaledBitmap(gravityBeige, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT, true);
+
+        Animation animJumpBeige = new Animation(new Bitmap[]{scaledJumpBeige}, 2);
+        Animation animGravityBeige = new Animation(new Bitmap[]{scaledGravityBeige}, 2);
+        Animation animWalkRightBeige = new Animation(new Bitmap[]{scaledWalkBeige1, scaledWalkBeige2}, 0.25f);
+
+        this.animationManager = new AnimationManager(new Animation[]
+                {animWalkRightBlue, animJumpBlue, animGravityBlue,
+                        animWalkRightBeige, animJumpBeige, animGravityBeige,
+                        animWalkRightPink, animJumpPink, animGravityPink,
+                        animWalkRightYellow, animJumpYellow, animGravityYellow,
+                        animWalkRightGreen, animJumpGreen, animGravityGreen
+                });
+
+    }
     Rect getRectangle() {
         return rectangle;
     }
@@ -80,13 +151,46 @@ class AlienSprite {
         /* left, top, right, bottom */
         /* Le point est le centre du rectangle */
         rectangle.set(point.x - rectangle.width()/2, point.y - rectangle.height()/2,point.x + rectangle.width()/2, point.y + rectangle.height()/2);
-
-        int state = 0; /* etat de l'anim, idle, walk1 walk 2 ? */
-        if (rectangle.top - oldTop > 5) /* On aurait pu mettre 0, mais sinon il y aurait eu trop d'anim, on prefere laisser un peu d'espace entre une anim donc 5 pixels*/ {
-            state = 2; /* allez a gauche */
-        } else if (rectangle.top - oldTop < -5) {
-            state = 1; /* allez a droite */
+/* TODO : faire fonction */
+        int state ;
+        switch (MapScene.activeMap)
+        {
+            case 1:
+                state = 0; /* etat de l'anim, idle, walk1 walk 2 ? */
+                if (rectangle.top - oldTop > 5) /* On aurait pu mettre 0, mais sinon il y aurait eu trop d'anim, on prefere laisser un peu d'espace entre une anim donc 5 pixels*/ {
+                    state = 2; /* allez a gauche */
+                } else if (rectangle.top - oldTop < -5) {
+                    state = 1; /* allez a droite */
+                }
+                break ;
+            case 2:
+                state = 3; /* etat de l'anim, idle, walk1 walk 2 ? */
+                if (rectangle.top - oldTop > 5) /* On aurait pu mettre 0, mais sinon il y aurait eu trop d'anim, on prefere laisser un peu d'espace entre une anim donc 5 pixels*/ {
+                    state = 5; /* allez a gauche */
+                } else if (rectangle.top - oldTop < -5) {
+                    state = 4; /* allez a droite */
+                }
+                break ;
+            case 3:
+                state = 6; /* etat de l'anim, idle, walk1 walk 2 ? */
+                if (rectangle.top - oldTop > 5) /* On aurait pu mettre 0, mais sinon il y aurait eu trop d'anim, on prefere laisser un peu d'espace entre une anim donc 5 pixels*/ {
+                    state = 8; /* allez a gauche */
+                } else if (rectangle.top - oldTop < -5) {
+                    state = 7; /* allez a droite */
+                }
+                break ;
+            case 4:
+                state = 9; /* etat de l'anim, idle, walk1 walk 2 ? */
+                if (rectangle.top - oldTop > 5) /* On aurait pu mettre 0, mais sinon il y aurait eu trop d'anim, on prefere laisser un peu d'espace entre une anim donc 5 pixels*/ {
+                    state = 11; /* allez a gauche */
+                } else if (rectangle.top - oldTop < -5) {
+                    state = 10; /* allez a droite */
+                }
+                break ;
+            default:
+                throw new IllegalArgumentException();
         }
+
         animationManager.playAnim(state);
         animationManager.update();
     }

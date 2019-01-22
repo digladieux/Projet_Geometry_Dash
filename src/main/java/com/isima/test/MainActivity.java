@@ -3,6 +3,7 @@ package com.isima.test;
 import android.app.Activity;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
@@ -10,9 +11,9 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
         /* Lance une methode de la super classe qui initialise l'activite */
         super.onCreate(savedInstanceState);
@@ -39,6 +40,13 @@ public class MainActivity extends Activity {
         textView.setTypeface(typeface);*/
         /* On modifie l'affichage de l'ecran, pour mettre ce type de fenetre, qu'on definit dans GamePanel */
         setContentView(new GamePanel(this));
+
+/*
+        android:fontFamily="@fonts/showg"
+        TextView textView = (TextView) findViewById(R.id.sample_text) ;
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/showg.ttf" );
+        textView.setTypeface(typeface);
+*/
     }
 }
 

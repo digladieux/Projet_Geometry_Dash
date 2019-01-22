@@ -11,6 +11,8 @@ import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
+import java.io.IOException;
+
 public class GameScene implements Scene {
 
     /* Zone pour l'affichage de l'erreur */
@@ -31,11 +33,11 @@ public class GameScene implements Scene {
     private boolean changingMap;
 
     private int attempt;
-    private Context context ;
+    private final Context context ;
     private long gameOverTime ;
 
-    private MediaPlayer gamingMusic ;
-    private MediaPlayer gameOverMusic;
+    private final MediaPlayer gamingMusic ;
+    private final MediaPlayer gameOverMusic;
 
 
 
@@ -50,9 +52,9 @@ public class GameScene implements Scene {
         obstacleManager = new ObstacleManager(context, mapNumber);
         this.actionDown = false;
         this.attempt = 0;
-        Bitmap mReturnMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.return_menu);
+        Bitmap mReturnMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.return_arrow);
         Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_game);
-        Bitmap mBackgroundAttempt = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_button);
+        Bitmap mBackgroundAttempt = BitmapFactory.decodeResource(context.getResources(), R.drawable.attemp);
 
         this.scaledBackgroundAttempt = Bitmap.createScaledBitmap(mBackgroundAttempt, 200, 150, true);
         this.scaledReturnMenu = Bitmap.createScaledBitmap(mReturnMenu, 100, 100, true);
@@ -60,6 +62,7 @@ public class GameScene implements Scene {
 
         gameOverMusic = MediaPlayer.create(context.getApplicationContext(), R.raw.gameoversong);
         gamingMusic = MediaPlayer.create(context.getApplicationContext(), R.raw.gamingsong);
+
     }
     private void reset() {
         gamingMusic.start();
@@ -105,6 +108,13 @@ public class GameScene implements Scene {
                     this.attempt++;
                     gameOver = true;
                     gamingMusic.stop();
+
+                    try {
+                        gamingMusic.prepare();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    gamingMusic.seekTo(0);
                     gameOverMusic.start();
                 }
 
@@ -149,14 +159,16 @@ public class GameScene implements Scene {
                 }
                 else
                 {
-                    Paint paint = new Paint() ;
-                    paint.setTextSize(100);
                     if (gameOver) {
-                        paint.setColor(Color.RED);
-                        paint.setTextAlign(Paint.Align.CENTER);
-                        canvas.drawText("GameOver! Retry", Constants.SCREEN_WIDTH/2, Constants.SCREEN_HEIGHT/2, paint);
+                        Paint paintGameOver = new Paint();
+                        paintGameOver.setTextSize(100);
+                        paintGameOver.setColor(Color.MAGENTA);
+                        paintGameOver.setTextAlign(Paint.Align.CENTER);
+                        Rect srcBackgroundGameOver = new Rect(0, 0, scaledBackgroundAttempt.getWidth() - 1, scaledBackgroundAttempt.getHeight() - 1);
+                        Rect destBackgroundGameOver= new Rect(Constants.SCREEN_WIDTH/2  -  (int)(paintGameOver.measureText("GameOver! Retry")/2), Constants.SCREEN_HEIGHT/2 - (int)(paintGameOver.getTextSize()) , Constants.SCREEN_WIDTH/2 + (int)( paintGameOver.measureText("GameOver! Retry")/2), Constants.SCREEN_HEIGHT/2 + (int)paintGameOver.descent() ) ;
+                        canvas.drawBitmap(scaledBackgroundAttempt, srcBackgroundGameOver, destBackgroundGameOver, null);
+                        canvas.drawText("GameOver! Retry", Constants.SCREEN_WIDTH/2, Constants.SCREEN_HEIGHT/2, paintGameOver);
                     } else {
-                        gamingMusic.stop();
                         this.terminate();
                     }
                 }
@@ -171,6 +183,19 @@ public class GameScene implements Scene {
 
     @Override
     public void terminate() {
+
+        gamingMusic.stop();
+        gameOverMusic.stop();
+
+        try {
+            gamingMusic.prepare();
+            gameOverMusic.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        gamingMusic.seekTo(0);
+        gameOverMusic.seekTo(0);
+
         if (changingMap)
         {
             reset();

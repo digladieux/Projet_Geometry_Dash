@@ -1,7 +1,5 @@
 package com.isima.test;
 
-import android.content.Context;
-
 class Constants
 {
     static int SCREEN_WIDTH ;

@@ -4,7 +4,6 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 class MainThread extends Thread {
-    private static final int MAX_FPS = 60;  /* final = const en c++ */
     private final SurfaceHolder surfaceHolder; /* Zone de la fenetre */
     private final GamePanel gamePanel; /* Zone du jeu */
     private boolean running; /* Le thread tourne t'il */

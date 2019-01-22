@@ -11,12 +11,14 @@ import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
+import java.io.IOException;
+
 public class WiningScene implements Scene {
 
     private final Bitmap scaledBackground;
     private long winningTime;
-    private Context context ;
-    private MediaPlayer winningMusic;
+    private final Context context ;
+    private final MediaPlayer winningMusic;
     WiningScene(Context context)
     {
         this.context = context ;
@@ -30,7 +32,7 @@ public class WiningScene implements Scene {
         {
             if (MapScene.mapAvailable == MapScene.activeMap)
             {
-                SharedPreferences.Editor edit = context.getSharedPreferences("MapAvailable", context.MODE_PRIVATE).edit();
+                SharedPreferences.Editor edit = context.getSharedPreferences("MapAvailable", Context.MODE_PRIVATE).edit();
                 MapScene.mapAvailable ++ ;
                 edit.putInt("map", MapScene.mapAvailable) ;
                 edit.apply();
@@ -41,6 +43,14 @@ public class WiningScene implements Scene {
         else if (System.currentTimeMillis() - winningTime > 2000)
         {
             winningMusic.stop();
+
+            try {
+                winningMusic.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            winningMusic.seekTo(0);
+
             this.terminate();
         }
     }
@@ -64,11 +74,6 @@ public class WiningScene implements Scene {
 
     @Override
     public void recieveTouch(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_UP)
-        {
-            winningMusic.stop();
-            this.terminate();
-        }
 
     }
 }

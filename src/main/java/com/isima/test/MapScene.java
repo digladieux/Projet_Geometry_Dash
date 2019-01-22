@@ -5,125 +5,152 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
+import java.io.IOException;
+
 public class MapScene implements Scene {
 
     private final Bitmap scaledBackground;
+    private final Bitmap scaledDressing;
     private final Bitmap[] scaledButtonMap ;
     static int mapAvailable;
-    static short activeMap ;
-    MediaPlayer menuMusic;
-
+    static int activeMap ;
+    private final MediaPlayer menuMusic;
+    private boolean isMusic ;
 
     MapScene(Context context) {
-
+        isMusic = false ;
         menuMusic = MediaPlayer.create(context.getApplicationContext(), R.raw.menusong);
+
         activeMap = 1 ;
         GameScene.mapNumber = 0;
-        Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_menu);
-        Bitmap mButtonMap0 = BitmapFactory.decodeResource(context.getResources(), R.drawable.earth);
-        Bitmap mButtonMap1 = BitmapFactory.decodeResource(context.getResources(), R.drawable.moon);
-        Bitmap mButtonMap2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.mars);
-        Bitmap mButtonMap3 = BitmapFactory.decodeResource(context.getResources(), R.drawable.sun);
 
+        Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_menu);
         this.scaledButtonMap = new Bitmap[4] ;
+        Bitmap mButtonMap[] = new Bitmap[4] ;
+        mButtonMap[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.earth);
+        mButtonMap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.moon);
+        mButtonMap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.mars);
+        mButtonMap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.sun);
+        Bitmap mDressing = BitmapFactory.decodeResource(context.getResources(), R.drawable.dress);
+        this.scaledDressing = Bitmap.createScaledBitmap(mDressing, 100, 100, true);
         this.scaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
 
-        this.scaledButtonMap[0] = Bitmap.createScaledBitmap(mButtonMap0, Constants.SCREEN_WIDTH/8, Constants.SCREEN_HEIGHT/3, true);
-        this.scaledButtonMap[1] = Bitmap.createScaledBitmap(mButtonMap1, Constants.SCREEN_WIDTH/8, Constants.SCREEN_HEIGHT/3, true);
-        this.scaledButtonMap[2] = Bitmap.createScaledBitmap(mButtonMap2, Constants.SCREEN_WIDTH/8, Constants.SCREEN_HEIGHT/3, true);
-        this.scaledButtonMap[3] = Bitmap.createScaledBitmap(mButtonMap3, Constants.SCREEN_WIDTH/8, Constants.SCREEN_HEIGHT/3, true);
+        for (int i = 0 ; i < this.scaledButtonMap.length ; i ++)
+        {
+            this.scaledButtonMap[i] = Bitmap.createScaledBitmap(mButtonMap[i], 2 * Constants.SCREEN_WIDTH/7, Constants.SCREEN_HEIGHT/5, true);
+        }
 
-        SharedPreferences fileMapAvailable = context.getSharedPreferences("MapAvailable", context.MODE_PRIVATE);
+        SharedPreferences fileMapAvailable = context.getSharedPreferences("MapAvailable", Context.MODE_PRIVATE);
         mapAvailable = fileMapAvailable.getInt("map", 1);
     }
 
     @Override
     public void update() {
-        if (!menuMusic.isPlaying())
+
+        if ( (!isMusic) && (SceneManager.ACTIVE_SCENE == 1))
         {
             menuMusic.start();
+            isMusic = true ;
         }
-
     }
 
+/*TODO : sous fonction beaucoup de répétition de code */
     @Override
     public void draw(Canvas canvas) {
+
+
+
         Rect src = new Rect(0, 0, scaledBackground.getWidth() - 1, scaledBackground.getHeight() - 1);
         Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
         canvas.drawBitmap(scaledBackground, src, dest, null);
 
-        if ((mapAvailable >= 1)  && (activeMap >= 1))
+        Rect srcDressing = new Rect(0, 0, scaledDressing.getWidth() - 1, scaledDressing.getHeight() - 1);
+        Rect destDressing= new Rect(Constants.SCREEN_WIDTH - 101, 0, Constants.SCREEN_WIDTH - 1, 100);
+        canvas.drawBitmap(scaledDressing, srcDressing, destDressing, null);
+
+        if (mapAvailable >= 1)
         {
-            Rect srcButton1 = new Rect(0, 0, scaledButtonMap[0].getWidth() - 1, scaledButtonMap[0].getHeight() - 1);
-            Rect destButton1 = new Rect(Constants.SCREEN_WIDTH/8, Constants.SCREEN_HEIGHT/8, Constants.SCREEN_WIDTH/8 + scaledButtonMap[0].getWidth(), Constants.SCREEN_HEIGHT/8 + scaledButtonMap[0].getHeight());
-            canvas.drawBitmap(scaledButtonMap[0], srcButton1, destButton1, null);
+            displayButton(canvas, scaledButtonMap[0], (float)1/7, (float)3/7, (float) 1/5, (float) 2/5) ;
         }
 
-        if ((mapAvailable >= 2)  && (activeMap >= 1))
+        if (mapAvailable >= 2)
         {
-            Rect srcButton2 = new Rect(0, 0, scaledButtonMap[1].getWidth() - 1, scaledButtonMap[1].getHeight() - 1);
-            Rect destButton2 = new Rect(5 * Constants.SCREEN_WIDTH/8, Constants.SCREEN_HEIGHT/8, 5 * Constants.SCREEN_WIDTH/8 + scaledButtonMap[1].getWidth(), Constants.SCREEN_HEIGHT/8 + scaledButtonMap[1].getHeight());
-            canvas.drawBitmap(scaledButtonMap[1], srcButton2, destButton2, null);
+            displayButton(canvas, scaledButtonMap[1], (float)4/7, (float)6/7, (float) 1/5, (float) 2/5) ;
         }
-        if ((mapAvailable >= 3)  && (activeMap >= 1))
+        if (mapAvailable >= 3)
         {
-            Rect srcButton3 = new Rect(0, 0, scaledButtonMap[2].getWidth() - 1, scaledButtonMap[2].getHeight() - 1);
-            Rect destButton3 = new Rect(Constants.SCREEN_WIDTH/8, 5 * Constants.SCREEN_HEIGHT/8, Constants.SCREEN_WIDTH/8 + scaledButtonMap[2].getWidth(), 5 * Constants.SCREEN_HEIGHT/8 + scaledButtonMap[2].getHeight());
-            canvas.drawBitmap(scaledButtonMap[2], srcButton3, destButton3, null);
+            displayButton(canvas, scaledButtonMap[2], (float)1/7, (float)3/7, (float) 3/5, (float) 4/5) ;
         }
 
-        if ((mapAvailable >= 4)  && (activeMap >= 1))
+        if (mapAvailable >= 4)
         {
-            Rect srcButton4 = new Rect(0, 0, scaledButtonMap[3].getWidth() - 1, scaledButtonMap[3].getHeight() - 1);
-            Rect destButton4 = new Rect(5 * Constants.SCREEN_WIDTH/8, 5 * Constants.SCREEN_HEIGHT/8, 5 * Constants.SCREEN_WIDTH/8 + scaledButtonMap[3].getWidth(), 5 * Constants.SCREEN_HEIGHT/8 + scaledButtonMap[3].getHeight());
-            canvas.drawBitmap(scaledButtonMap[3], srcButton4, destButton4, null);
+            displayButton(canvas, scaledButtonMap[3], (float)4/7, (float)6/7, (float) 3/5, (float) 4/5) ;
         }
 
     }
-
-    private void drawPaint(Canvas canvas, String text, int x, int y) {
-        Paint paintMap = new Paint();
-        paintMap.setTextSize(100);
-        paintMap.setColor(Color.RED);
-        paintMap.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText(text, x, y, paintMap);
+    private void displayButton(Canvas canvas, Bitmap scaledButton, float areaLeft, float areaRight, float areaTop, float areaBottom)
+    {
+        Rect srcButton = new Rect(0, 0, scaledButton.getWidth() - 1, scaledButton.getHeight() - 1);
+        Rect destButton = new Rect((int) (areaLeft * Constants.SCREEN_WIDTH - 1), (int) (areaTop * Constants.SCREEN_HEIGHT - 1), (int) (areaRight * Constants.SCREEN_WIDTH - 1), (int) (areaBottom * Constants.SCREEN_HEIGHT - 1));
+        canvas.drawBitmap(scaledButton, srcButton, destButton, null);
     }
-
     @Override
     public void terminate() {
+        menuMusic.stop();
+        try {
+            menuMusic.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        menuMusic.seekTo(0);
+        isMusic = false ;
         SceneManager.ACTIVE_SCENE = 2;
     }
 
     @Override
     public void recieveTouch(MotionEvent event) {
-        if ((event.getAction() == MotionEvent.ACTION_UP) && (event.getRawX() < Constants.SCREEN_WIDTH / 2) && (event.getRawY() < Constants.SCREEN_HEIGHT / 2) && (mapAvailable >= 1)) {
-            activeMap = 1 ;
+
+        if (isMapDisplay(event, (float)1/7, (float)3/7, (float)1/5, (float)2/5, 1))
+        {
             changingScene(1);
 
-        } else if ((event.getAction() == MotionEvent.ACTION_UP) && (event.getRawX() > Constants.SCREEN_WIDTH / 2) && (event.getRawY() < Constants.SCREEN_HEIGHT / 2) && (mapAvailable >= 2)) {
-            activeMap = 2 ;
+        } else if (isMapDisplay(event, (float)4/7, (float)6/7, (float)1/5, (float)2/5, 2))
+        {
             changingScene(2);
 
-        } else if ((event.getAction() == MotionEvent.ACTION_UP) && (event.getRawX() < Constants.SCREEN_WIDTH / 2) && (event.getRawY() > Constants.SCREEN_HEIGHT / 2) && (mapAvailable >= 3)) {
-            activeMap = 3 ;
+        } else if (isMapDisplay(event, (float)1/7, (float)3/7, (float)3/5, (float)4/5, 3))
+        {
             changingScene(3);
 
-        } else if ((event.getAction() == MotionEvent.ACTION_UP) && (event.getRawX() > Constants.SCREEN_WIDTH / 2) && (event.getRawY() > Constants.SCREEN_HEIGHT / 2)&& (mapAvailable >= 4)) {
-            activeMap = 4 ;
+        } else if (isMapDisplay(event, (float)4/7, (float)6/7, (float)3/5, (float)4/5, 4))
+        {
             changingScene(4);
         }
-
+        if ((event.getAction() == MotionEvent.ACTION_UP) && (event.getRawX() > Constants.SCREEN_WIDTH - 100) && (event.getRawY() < 100))
+        {
+//            this.terminate();
+        }
     }
 
     private void changingScene(int mapNumber) {
+        activeMap = mapNumber ;
         GameScene.mapNumber = mapNumber;
-        menuMusic.stop();
         this.terminate();
     }
+
+    private boolean isMapDisplay(MotionEvent event, float areaLeft, float areaRight, float areaTop, float areaBottom, int mapAvailable)
+    {
+        return (event.getAction() == MotionEvent.ACTION_UP)
+                && (event.getRawX() >= areaLeft * Constants.SCREEN_WIDTH)
+                && (event.getRawX() <= areaRight * Constants.SCREEN_WIDTH)
+                && (event.getRawY() >= areaTop * Constants.SCREEN_HEIGHT)
+                && (event.getRawY() <= areaBottom * Constants.SCREEN_HEIGHT)
+                && (MapScene.mapAvailable >= mapAvailable);
+    }
 }
+
+

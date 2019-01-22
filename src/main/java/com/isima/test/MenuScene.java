@@ -4,32 +4,24 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
-import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 public class MenuScene implements Scene {
 
     private final Bitmap mScaledBackground;
-    private long menuTime ;
-
+    private final Bitmap mScaledStart;
 
     MenuScene(Context context)
     {
-        menuTime = System.currentTimeMillis();
+        Bitmap mStart = BitmapFactory.decodeResource(context.getResources(), R.drawable.start);
         Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_menu);
         this.mScaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
+        this.mScaledStart =Bitmap.createScaledBitmap(mStart, 3 * Constants.SCREEN_WIDTH/7, Constants.SCREEN_HEIGHT/5, true);
     }
 
     @Override
     public void update() {
-        if (System.currentTimeMillis() - menuTime > 4000)
-        {
-            this.terminate();
-        }
-
 
     }
 
@@ -38,11 +30,11 @@ public class MenuScene implements Scene {
         Rect src = new Rect(0, 0, mScaledBackground.getWidth() - 1, mScaledBackground.getHeight() - 1);
         Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
         canvas.drawBitmap(mScaledBackground, src, dest, null);
-        Paint paintMenu = new Paint();
-        paintMenu.setTextSize(100);
-        paintMenu.setColor(Color.MAGENTA);
-        paintMenu.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("Space Jump", Constants.SCREEN_WIDTH/2, Constants.SCREEN_HEIGHT/2, paintMenu);
+
+        Rect srcStart = new Rect(0, 0, mScaledStart.getWidth() - 1, mScaledStart.getHeight() - 1);
+        Rect destStart = new Rect(2 * Constants.SCREEN_WIDTH/7, 2 * Constants.SCREEN_HEIGHT/5,5 * Constants.SCREEN_WIDTH/7, 3 * Constants.SCREEN_HEIGHT/5);
+        canvas.drawBitmap(mScaledStart, srcStart, destStart, null);
+
     }
 
 
@@ -54,7 +46,14 @@ public class MenuScene implements Scene {
 
     @Override
     public void recieveTouch(MotionEvent event) {
-
+        if ((event.getAction() == MotionEvent.ACTION_UP)
+                && (event.getRawX() >= 2 * Constants.SCREEN_WIDTH /7)
+                && (event.getRawX() <= 5 * Constants.SCREEN_WIDTH / 7)
+                && (event.getRawY() >= 2 * Constants.SCREEN_HEIGHT / 5)
+                && (event.getRawY() <= 3 * Constants.SCREEN_HEIGHT /5))
+        {
+            this.terminate();
+        }
     }
 
 }

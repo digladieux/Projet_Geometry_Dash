@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 class SceneManager {
