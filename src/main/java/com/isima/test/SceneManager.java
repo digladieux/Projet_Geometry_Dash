@@ -19,6 +19,8 @@ class SceneManager {
         scenes.add(new MapScene(context)) ;
         scenes.add(new GameScene(context)) ;
         scenes.add(new WiningScene(context)) ;
+        scenes.add(new DressingScene(context)) ;
+        scenes.add(new RewardsScene(context)) ;
 
     }
 

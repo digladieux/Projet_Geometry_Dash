@@ -156,36 +156,17 @@ class AlienSprite {
         switch (MapScene.activeMap)
         {
             case 1:
-                state = 0; /* etat de l'anim, idle, walk1 walk 2 ? */
-                if (rectangle.top - oldTop > 5) /* On aurait pu mettre 0, mais sinon il y aurait eu trop d'anim, on prefere laisser un peu d'espace entre une anim donc 5 pixels*/ {
-                    state = 2; /* allez a gauche */
-                } else if (rectangle.top - oldTop < -5) {
-                    state = 1; /* allez a droite */
-                }
+                state = giveStateSprite(oldTop, 0, 1 , 2) ;
                 break ;
             case 2:
-                state = 3; /* etat de l'anim, idle, walk1 walk 2 ? */
-                if (rectangle.top - oldTop > 5) /* On aurait pu mettre 0, mais sinon il y aurait eu trop d'anim, on prefere laisser un peu d'espace entre une anim donc 5 pixels*/ {
-                    state = 5; /* allez a gauche */
-                } else if (rectangle.top - oldTop < -5) {
-                    state = 4; /* allez a droite */
-                }
+                state = giveStateSprite(oldTop,3,4,5); /* etat de l'anim, idle, walk1 walk 2 ? */
                 break ;
             case 3:
-                state = 6; /* etat de l'anim, idle, walk1 walk 2 ? */
-                if (rectangle.top - oldTop > 5) /* On aurait pu mettre 0, mais sinon il y aurait eu trop d'anim, on prefere laisser un peu d'espace entre une anim donc 5 pixels*/ {
-                    state = 8; /* allez a gauche */
-                } else if (rectangle.top - oldTop < -5) {
-                    state = 7; /* allez a droite */
-                }
+                state = giveStateSprite(oldTop,6,7,8); /* etat de l'anim, idle, walk1 walk 2 ? */
                 break ;
             case 4:
-                state = 9; /* etat de l'anim, idle, walk1 walk 2 ? */
-                if (rectangle.top - oldTop > 5) /* On aurait pu mettre 0, mais sinon il y aurait eu trop d'anim, on prefere laisser un peu d'espace entre une anim donc 5 pixels*/ {
-                    state = 11; /* allez a gauche */
-                } else if (rectangle.top - oldTop < -5) {
-                    state = 10; /* allez a droite */
-                }
+                state = giveStateSprite(oldTop,9,10,11); /* etat de l'anim, idle, walk1 walk 2 ? */
+
                 break ;
             default:
                 throw new IllegalArgumentException();
@@ -193,6 +174,17 @@ class AlienSprite {
 
         animationManager.playAnim(state);
         animationManager.update();
+    }
+
+    private int giveStateSprite(float oldTop, int walk, int jump, int gravity)
+    {
+        int state = walk ;
+        if (rectangle.top - oldTop > 5) /* On aurait pu mettre 0, mais sinon il y aurait eu trop d'anim, on prefere laisser un peu d'espace entre une anim donc 5 pixels*/ {
+            state = gravity; /* allez a gauche */
+        } else if (rectangle.top - oldTop < -5) {
+            state = jump; /* allez a droite */
+        }
+        return state ;
     }
 }
 
