@@ -3,7 +3,6 @@ package com.isima.test;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
@@ -11,48 +10,43 @@ import android.view.MotionEvent;
 
 import java.io.IOException;
 
+import static com.isima.test.StaticMethod.createPicture;
+import static com.isima.test.StaticMethod.drawBitmap;
+import static com.isima.test.StaticMethod.drawBitmap;
+import static com.isima.test.StaticMethod.drawBitmapBackground;
+import static com.isima.test.StaticMethod.drawBitmapReturn;
+import static com.isima.test.StaticMethod.isButtonClick;
+
 public class MapScene implements Scene {
 
+    private final Bitmap scaledReturnMenu;
+
     private final Bitmap scaledBackground;
-    private final Bitmap scaledDressing;
-    private final Bitmap scaledRewards;
     private final Bitmap[] scaledButtonMap ;
     static int mapAvailable;
     static int activeMap ;
     private final MediaPlayer menuMusic;
     private boolean isMusic ;
-    private boolean goingDressingScene ;
-    private boolean goingRewards;
+    private boolean returnMenu;
+
     MapScene(Context context) {
 
-        goingDressingScene = false ;
-        goingRewards = false ;
+        returnMenu = false ;
         isMusic = false ;
         menuMusic = MediaPlayer.create(context.getApplicationContext(), R.raw.menusong);
 
-        activeMap = 1 ;
-        GameScene.mapNumber = 0;
+        activeMap = 0 ;
 
-        Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_menu);
         this.scaledButtonMap = new Bitmap[4] ;
-        Bitmap mButtonMap[] = new Bitmap[4] ;
-        mButtonMap[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.earth);
-        mButtonMap[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.moon);
-        mButtonMap[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.mars);
-        mButtonMap[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.sun);
-        Bitmap mDressing = BitmapFactory.decodeResource(context.getResources(), R.drawable.dress);
-        Bitmap mRewards = BitmapFactory.decodeResource(context.getResources(), R.drawable.rewards);
-        this.scaledDressing = Bitmap.createScaledBitmap(mDressing, 100, 100, true);
-        this.scaledRewards = Bitmap.createScaledBitmap(mRewards, 100, 100, true);
-        this.scaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
-
-        for (int i = 0 ; i < this.scaledButtonMap.length ; i ++)
-        {
-            this.scaledButtonMap[i] = Bitmap.createScaledBitmap(mButtonMap[i], 2 * Constants.SCREEN_WIDTH/7, Constants.SCREEN_HEIGHT/5, true);
-        }
+        this.scaledReturnMenu  = createPicture(context, R.drawable.return_arrow, Constants.SCREEN_WIDTH/14,Constants.SCREEN_WIDTH/14);
+        this.scaledBackground  = createPicture(context, R.drawable.background, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        this.scaledButtonMap[0]  = createPicture(context, R.drawable.earth, 3 * Constants.SCREEN_WIDTH/9, Constants.SCREEN_HEIGHT/5);
+        this.scaledButtonMap[1]  = createPicture(context, R.drawable.moon, 3 * Constants.SCREEN_WIDTH/9, Constants.SCREEN_HEIGHT/5);
+        this.scaledButtonMap[2]  = createPicture(context, R.drawable.mars, 3 * Constants.SCREEN_WIDTH/9, Constants.SCREEN_HEIGHT/5);
+        this.scaledButtonMap[3]  = createPicture(context, R.drawable.sun, 3 * Constants.SCREEN_WIDTH/9, Constants.SCREEN_HEIGHT/5);
 
         SharedPreferences fileMapAvailable = context.getSharedPreferences("MapAvailable", Context.MODE_PRIVATE);
-        mapAvailable = fileMapAvailable.getInt("map", 1);
+        mapAvailable = fileMapAvailable.getInt("map", 0);
     }
 
     @Override
@@ -70,60 +64,35 @@ public class MapScene implements Scene {
     public void draw(Canvas canvas) {
 
 
+        drawBitmapBackground(canvas, scaledBackground);
+        drawBitmapReturn(canvas, scaledReturnMenu);
 
-        Rect src = new Rect(0, 0, scaledBackground.getWidth() - 1, scaledBackground.getHeight() - 1);
-        Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
-        canvas.drawBitmap(scaledBackground, src, dest, null);
-
-        Rect srcDressing = new Rect(0, 0, scaledDressing.getWidth() - 1, scaledDressing.getHeight() - 1);
-        Rect destDressing= new Rect(Constants.SCREEN_WIDTH - 101, 0, Constants.SCREEN_WIDTH - 1, 100);
-        canvas.drawBitmap(scaledDressing, srcDressing, destDressing, null);
-
-
-        Rect srcRewards = new Rect(0, 0, scaledRewards.getWidth() - 1, scaledRewards.getHeight() - 1);
-        Rect destRewards = new Rect(Constants.SCREEN_WIDTH - 301, 0, Constants.SCREEN_WIDTH - 201, 100);
-        canvas.drawBitmap(scaledRewards, srcRewards, destRewards, null);
-
+        if (mapAvailable >= 0)
+        {
+            drawBitmap(canvas, scaledButtonMap[0], (float)2.5/9,(float) 1.5/5) ;
+        }
         if (mapAvailable >= 1)
         {
-            displayButton(canvas, scaledButtonMap[0], (float)1/7, (float)3/7, (float) 1/5, (float) 2/5) ;
+            drawBitmap(canvas, scaledButtonMap[1], (float)6.5/9, (float) 1.5/5) ;
         }
-
         if (mapAvailable >= 2)
         {
-            displayButton(canvas, scaledButtonMap[1], (float)4/7, (float)6/7, (float) 1/5, (float) 2/5) ;
+            drawBitmap(canvas, scaledButtonMap[2], (float)2.5/9,(float) 3.5/5) ;
         }
+
         if (mapAvailable >= 3)
         {
-            displayButton(canvas, scaledButtonMap[2], (float)1/7, (float)3/7, (float) 3/5, (float) 4/5) ;
-        }
-
-        if (mapAvailable >= 4)
-        {
-            displayButton(canvas, scaledButtonMap[3], (float)4/7, (float)6/7, (float) 3/5, (float) 4/5) ;
+            drawBitmap(canvas, scaledButtonMap[3], (float)6.5/9,(float) 3.5/5) ;
         }
 
     }
-    private void displayButton(Canvas canvas, Bitmap scaledButton, float areaLeft, float areaRight, float areaTop, float areaBottom)
-    {
-        Rect srcButton = new Rect(0, 0, scaledButton.getWidth() - 1, scaledButton.getHeight() - 1);
-        Rect destButton = new Rect((int) (areaLeft * Constants.SCREEN_WIDTH - 1), (int) (areaTop * Constants.SCREEN_HEIGHT - 1), (int) (areaRight * Constants.SCREEN_WIDTH - 1), (int) (areaBottom * Constants.SCREEN_HEIGHT - 1));
-        canvas.drawBitmap(scaledButton, srcButton, destButton, null);
-    }
+
     @Override
     public void terminate()
     {
-
-        if (goingDressingScene)
-        {
-            SceneManager.ACTIVE_SCENE = 4 ;
-            goingDressingScene = false ;
-        }
-
-        else if (goingRewards)
-        {
-            SceneManager.ACTIVE_SCENE = 5 ;
-            goingRewards = false ;
+        if (returnMenu) {
+            returnMenu = false;
+            SceneManager.ACTIVE_SCENE = 0;
         }
         else
         {
@@ -137,40 +106,33 @@ public class MapScene implements Scene {
             isMusic = false ;
             SceneManager.ACTIVE_SCENE = 2;
         }
+
     }
 
     @Override
     public void recieveTouch(MotionEvent event) {
 
-        if (isMapDisplay(event, (float)1/7, (float)3/7, (float)1/5, (float)2/5, 1))
+        if (isButtonClick(event))
+        {
+            returnMenu = true ;
+            this.terminate();
+        }
+
+        else if (isButtonClick(event, scaledButtonMap[0], (float) 2.5/9, (float) 1.5/5, 1))
+        {
+            changingScene(0);
+
+        } else if (isButtonClick(event, scaledButtonMap[1], (float) 6.5/9, (float) 1.5/5, 2))
         {
             changingScene(1);
 
-        } else if (isMapDisplay(event, (float)4/7, (float)6/7, (float)1/5, (float)2/5, 2))
+        } else if (isButtonClick(event, scaledButtonMap[2], (float) 2.5/9, (float) 3.5/5, 3))
         {
             changingScene(2);
 
-        } else if (isMapDisplay(event, (float)1/7, (float)3/7, (float)3/5, (float)4/5, 3))
+        } else if (isButtonClick(event, scaledButtonMap[3], (float) 6.5/9, (float) 3.5/5, 4))
         {
             changingScene(3);
-
-        } else if (isMapDisplay(event, (float)4/7, (float)6/7, (float)3/5, (float)4/5, 4))
-        {
-            changingScene(4);
-        }
-        if ((event.getAction() == MotionEvent.ACTION_UP) && (event.getRawX() > Constants.SCREEN_WIDTH - 100) && (event.getRawY() < 100))
-        {
-            goingDressingScene = true ;
-            this.terminate();
-        }
-
-        if ((event.getAction() == MotionEvent.ACTION_UP)
-                && (event.getRawX() >= Constants.SCREEN_WIDTH - 301)
-                && (event.getRawX() <= Constants.SCREEN_WIDTH - 201)
-                && (event.getRawY() <= Constants.SCREEN_HEIGHT - 100))
-        {
-            goingRewards = true ;
-            this.terminate();
         }
     }
 
@@ -178,16 +140,6 @@ public class MapScene implements Scene {
         activeMap = mapNumber ;
         GameScene.mapNumber = mapNumber;
         this.terminate();
-    }
-
-    private boolean isMapDisplay(MotionEvent event, float areaLeft, float areaRight, float areaTop, float areaBottom, int mapAvailable)
-    {
-        return (event.getAction() == MotionEvent.ACTION_UP)
-                && (event.getRawX() >= areaLeft * Constants.SCREEN_WIDTH)
-                && (event.getRawX() <= areaRight * Constants.SCREEN_WIDTH)
-                && (event.getRawY() >= areaTop * Constants.SCREEN_HEIGHT)
-                && (event.getRawY() <= areaBottom * Constants.SCREEN_HEIGHT)
-                && (MapScene.mapAvailable >= mapAvailable);
     }
 }
 

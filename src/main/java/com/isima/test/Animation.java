@@ -8,7 +8,7 @@ import android.graphics.Rect;
 class Animation {
 
     private final Bitmap[] pictures;
-    private int pictureIndex;
+    private int pictureIndex = 0;
 
     private boolean isPLaying = false;
     private final float pictureTime; /* temps entre les frame */
@@ -16,10 +16,7 @@ class Animation {
 
     Animation(Bitmap[] pictures, float animTime) {
         this.pictures = pictures;
-        pictureIndex = 0 ;
-        /* animTime temps total de animation et on les egalise */
         pictureTime = animTime/ pictures.length ;
-
         currentTimePicture = System.currentTimeMillis();
     }
 

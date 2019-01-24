@@ -2,7 +2,6 @@ package com.isima.test;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,10 +12,16 @@ import android.view.MotionEvent;
 
 import java.io.IOException;
 
+import static com.isima.test.StaticMethod.createPicture;
+import static com.isima.test.StaticMethod.drawBitmap;
+import static com.isima.test.StaticMethod.drawBitmapBackground;
+import static com.isima.test.StaticMethod.drawBitmapReturn;
+import static com.isima.test.StaticMethod.isButtonClick;
+
 public class GameScene implements Scene {
 
     /* Zone pour l'affichage de l'erreur */
-    static int mapNumber = 0 ;
+    static int mapNumber ;
     private final Bitmap scaledBackground;
     private final Bitmap scaledReturnMenu;
     private final Bitmap scaledBackgroundAttempt ;
@@ -27,12 +32,12 @@ public class GameScene implements Scene {
     private boolean movingPlayer = false ;
     private boolean gameOver = false ;
     private boolean win = false;
-    private boolean actionDown;
+    private boolean actionDown = false;
     private boolean flagGameOverTime ;
-    private boolean gameNotStarted ;
-    private boolean changingMap;
+    private boolean gameNotStarted = true;
+    private boolean changingMap = false;
 
-    private int attempt;
+    private int attempt = 0;
     private final Context context ;
     private long gameOverTime ;
 
@@ -43,27 +48,21 @@ public class GameScene implements Scene {
 
     GameScene(Context context)
     {
-        this.context = context ;
-        this.changingMap = false ;
-        this.gameNotStarted = true ;
+        mapNumber = 0;
         player = new AlienSprite(context, new Rect(PlayerConstants.LEFT_PLAYER, PlayerConstants.TOP_PLAYER, PlayerConstants.RIGHT_PLAYER, PlayerConstants.BOTTOM_PLAYER));
         playerPoint = new Point(PlayerConstants.INIT_POSITION_X, PlayerConstants.INIT_POSITION_Y);
-        player.update(playerPoint) ;
         obstacleManager = new ObstacleManager(context, mapNumber);
-        this.actionDown = false;
-        this.attempt = 0;
-        Bitmap mReturnMenu = BitmapFactory.decodeResource(context.getResources(), R.drawable.return_arrow);
-        Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_game);
-        Bitmap mBackgroundAttempt = BitmapFactory.decodeResource(context.getResources(), R.drawable.attemp);
 
-        this.scaledBackgroundAttempt = Bitmap.createScaledBitmap(mBackgroundAttempt, 200, 150, true);
-        this.scaledReturnMenu = Bitmap.createScaledBitmap(mReturnMenu, 100, 100, true);
-        this.scaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
+        this.context = context ;
+        this.scaledReturnMenu  = createPicture(context, R.drawable.return_arrow, Constants.SCREEN_WIDTH/14,Constants.SCREEN_WIDTH/14);
+        this.scaledBackgroundAttempt = createPicture(context, R.drawable.attempt, Constants.SCREEN_WIDTH/3, Constants.SCREEN_HEIGHT/6);
+        this.scaledBackground = createPicture(context, R.drawable.background_game, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
 
         gameOverMusic = MediaPlayer.create(context.getApplicationContext(), R.raw.gameoversong);
         gamingMusic = MediaPlayer.create(context.getApplicationContext(), R.raw.gamingsong);
 
     }
+
     private void reset() {
         gamingMusic.start();
         gameOver = false ;
@@ -129,24 +128,17 @@ public class GameScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-        Rect srcBackground = new Rect(0, 0, scaledBackground.getWidth() - 1, scaledBackground.getHeight() - 1);
-        Rect destBackground = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
-        canvas.drawBitmap(scaledBackground, srcBackground, destBackground, null);
 
-        Rect srcReturnMenu = new Rect(0, 0, scaledReturnMenu.getWidth() - 1, scaledReturnMenu.getHeight() - 1);
-        Rect destReturnMenu = new Rect(Constants.SCREEN_WIDTH - 101, 0, Constants.SCREEN_WIDTH - 1, 100);
-        canvas.drawBitmap(scaledReturnMenu, srcReturnMenu, destReturnMenu, null);
-
-
+        drawBitmapBackground(canvas, scaledBackground);
+        drawBitmapReturn(canvas, scaledReturnMenu);
+        drawBitmap(canvas, scaledBackgroundAttempt,(float)1/5, (float)1/7);
         player.draw(canvas);
         obstacleManager.draw(canvas);
         Paint paintAttempt = new Paint();
-        paintAttempt.setTextSize(100);
-        paintAttempt.setColor(Color.MAGENTA);
-        Rect srcBackgroundAttempt = new Rect(0, 0, scaledBackgroundAttempt.getWidth() - 1, scaledBackgroundAttempt.getHeight() - 1);
-        Rect destBackgroundAttempt = new Rect(50 + (int) paintAttempt.descent() -  (int) paintAttempt.ascent(), 50 + (int) paintAttempt.descent(), 50 + (int)paintAttempt.descent() - (int) paintAttempt.ascent() + (int) paintAttempt.measureText("Attempt n° " + this.attempt), 50 + (int)paintAttempt.descent() + (int)paintAttempt.getTextSize()) ;
-        canvas.drawBitmap(scaledBackgroundAttempt, srcBackgroundAttempt, destBackgroundAttempt, null);
-        canvas.drawText("Attempt n°" + this.attempt, 50 + paintAttempt.descent() - paintAttempt.ascent(), 50 + paintAttempt.descent() - paintAttempt.ascent(), paintAttempt);
+        paintAttempt.setTextSize(Constants.SCREEN_WIDTH/14);
+        paintAttempt.setColor(Color.WHITE);
+
+        canvas.drawText(""+this.attempt, Constants.SCREEN_WIDTH/5 + scaledBackgroundAttempt.getWidth()/2 - (int) paintAttempt.measureText(" "+ attempt), Constants.SCREEN_HEIGHT/5, paintAttempt);
 
         if ((gameOver) || (win))
         {
@@ -160,14 +152,7 @@ public class GameScene implements Scene {
                 else
                 {
                     if (gameOver) {
-                        Paint paintGameOver = new Paint();
-                        paintGameOver.setTextSize(100);
-                        paintGameOver.setColor(Color.MAGENTA);
-                        paintGameOver.setTextAlign(Paint.Align.CENTER);
-                        Rect srcBackgroundGameOver = new Rect(0, 0, scaledBackgroundAttempt.getWidth() - 1, scaledBackgroundAttempt.getHeight() - 1);
-                        Rect destBackgroundGameOver= new Rect(Constants.SCREEN_WIDTH/2  -  (int)(paintGameOver.measureText("GameOver! Retry")/2), Constants.SCREEN_HEIGHT/2 - (int)(paintGameOver.getTextSize()) , Constants.SCREEN_WIDTH/2 + (int)( paintGameOver.measureText("GameOver! Retry")/2), Constants.SCREEN_HEIGHT/2 + (int)paintGameOver.descent() ) ;
-                        canvas.drawBitmap(scaledBackgroundAttempt, srcBackgroundGameOver, destBackgroundGameOver, null);
-                        canvas.drawText("GameOver! Retry", Constants.SCREEN_WIDTH/2, Constants.SCREEN_HEIGHT/2, paintGameOver);
+                        drawBitmap(canvas, scaledBackgroundAttempt,(float)1/2,(float)1/2 );
                     } else {
                         this.terminate();
                     }
@@ -211,7 +196,7 @@ public class GameScene implements Scene {
     @Override
 
     public void recieveTouch(MotionEvent event) {
-        if ((event.getAction() == MotionEvent.ACTION_UP) && (event.getRawX() > Constants.SCREEN_WIDTH - 100) && (event.getRawY() < 100))
+        if (isButtonClick(event))
         {
 
             this.actionDown = false ;

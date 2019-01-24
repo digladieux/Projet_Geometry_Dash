@@ -3,15 +3,17 @@ package com.isima.test;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 import java.io.IOException;
+
+import static com.isima.test.StaticMethod.createPicture;
+import static com.isima.test.StaticMethod.drawBitmap;
+import static com.isima.test.StaticMethod.drawBitmapBackground;
 
 public class WiningScene implements Scene {
 
@@ -23,8 +25,8 @@ public class WiningScene implements Scene {
     {
         this.context = context ;
         winningMusic = MediaPlayer.create(context.getApplicationContext(), R.raw.winningsong);
-        Bitmap mBackground = BitmapFactory.decodeResource(context.getResources(), R.drawable.background_winning);
-        this.scaledBackground = Bitmap.createScaledBitmap(mBackground, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, true);
+
+        this.scaledBackground  = createPicture(context, R.drawable.background_victory, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
     }
     @Override
     public void update() {
@@ -57,14 +59,8 @@ public class WiningScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-        Rect src = new Rect(0, 0, scaledBackground.getWidth() - 1, scaledBackground.getHeight() - 1);
-        Rect dest = new Rect(0, 0, Constants.SCREEN_WIDTH - 1, Constants.SCREEN_HEIGHT - 1);
-        canvas.drawBitmap(scaledBackground, src, dest, null);
-        Paint paintMenu = new Paint();
-        paintMenu.setTextSize(100);
-        paintMenu.setColor(Color.GREEN);
-        paintMenu.setTextAlign(Paint.Align.CENTER);
-        canvas.drawText("Gagné!", Constants.SCREEN_WIDTH/2, Constants.SCREEN_HEIGHT/2, paintMenu);
+
+        drawBitmapBackground(canvas, scaledBackground);
     }
 
     @Override
