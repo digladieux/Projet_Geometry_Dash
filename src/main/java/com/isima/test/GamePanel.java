@@ -7,12 +7,23 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-
-/* SurfaceView : "ecran du jeu", l'endroit du FULL_SCREEN */
-/* SurfaceHolder.Callback : Tous les changements autour de l'ecran, pour les faire en parallele du prog */
+/**
+ *
+ */
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
+    /**
+     *
+     */
     private MainThread thread ;
+    /**
+     *
+     */
     private final SceneManager manager;
+
+    /**
+     *
+     * @param context
+     */
     public GamePanel(Context context) /*Context : L'etat a l'intant t du telephone. On peut allumer bluetooth, la camera */
     {
         super(context) ;
@@ -27,12 +38,23 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         setFocusable(true);
     }
 
+    /**
+     *
+     * @param holder
+     * @param format
+     * @param width
+     * @param height
+     */
     @Override /* Permet de dire que cette fonction va heriter */
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) /* methode virtuel */
     {
 
     }
 
+    /**
+     *
+     * @param holder
+     */
     @Override
     /* TODO : pourquoi holder en parametre, enlever getHolder ? */
     public void surfaceCreated(SurfaceHolder holder)
@@ -43,6 +65,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
         thread.start() ;
     }
 
+    /**
+     *
+     * @param holder
+     */
     @Override
     public void surfaceDestroyed(SurfaceHolder holder)
     {
@@ -63,13 +89,20 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     }
 
+    /**
+     *
+     * @param event
+     * @return
+     */
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         manager.receiveTouch(event) ;
         return true;
     }
 
-    /* Mettre a jour le jeu, image par image */
+    /**
+     *
+     */
     public void update()
     {
         manager.update();
@@ -77,7 +110,9 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
 
-    /*Canvas : Creation du cadre, dessine tout de notre jeu */
+    /**
+     *
+     */
     public void draw(Canvas canvas)
     {
         super.draw(canvas) ;

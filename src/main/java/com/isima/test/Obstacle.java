@@ -16,8 +16,8 @@ abstract class Obstacle {
         animationManager.playAnim(0);
     }
 
-    Obstacle(Bitmap idle, int area_left, int area_top, int area_right, int are_bottom) {
-        areaObstacle = new Rect(area_left, area_top, area_right, are_bottom);
+    Obstacle(Bitmap idle, int area_left, int area_right) {
+        areaObstacle = new Rect(area_left, ConstantsGroundObstacle.OBSTACLE_TOP, area_right, ConstantsGroundObstacle.OBSTACLE_BOTTOM);
         Animation idleGround = new Animation(new Bitmap[]{idle}, 2);
         animationManager = new AnimationManager(new Animation[]{idleGround});
         animationManager.playAnim(0);
@@ -27,7 +27,7 @@ abstract class Obstacle {
     public boolean playerCollide(AlienSprite player) {
         return areaObstacle.intersect(player.getRectangle());
     }
-/* todo : non UML */
+
     void incrementX(float number_pixel_decrement) {
         areaObstacle.right -= number_pixel_decrement;
         areaObstacle.left -= number_pixel_decrement;

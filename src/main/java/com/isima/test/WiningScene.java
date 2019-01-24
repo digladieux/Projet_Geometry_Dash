@@ -4,15 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 import java.io.IOException;
 
 import static com.isima.test.StaticMethod.createPicture;
-import static com.isima.test.StaticMethod.drawBitmap;
 import static com.isima.test.StaticMethod.drawBitmapBackground;
 
 public class WiningScene implements Scene {
@@ -26,7 +23,14 @@ public class WiningScene implements Scene {
         this.context = context ;
         winningMusic = MediaPlayer.create(context.getApplicationContext(), R.raw.winningsong);
 
-        this.scaledBackground  = createPicture(context, R.drawable.background_victory, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        if (MapScene.mapAvailable == MapScene.activeMap)
+        {
+            this.scaledBackground  = createPicture(context, R.drawable.background_victory_rewards, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        }
+        else
+        {
+            this.scaledBackground  = createPicture(context, R.drawable.background_victory, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+        }
     }
     @Override
     public void update() {
@@ -61,10 +65,13 @@ public class WiningScene implements Scene {
     public void draw(Canvas canvas) {
 
         drawBitmapBackground(canvas, scaledBackground);
+        if (MapScene.mapAvailable == MapScene.activeMap)
+        {
+
+        }
     }
 
-    @Override
-    public void terminate() {
+    private void terminate() {
         SceneManager.ACTIVE_SCENE = 1 ;
     }
 

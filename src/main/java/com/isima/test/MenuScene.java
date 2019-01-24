@@ -7,13 +7,12 @@ import android.view.MotionEvent;
 
 import static com.isima.test.StaticMethod.createPicture;
 import static com.isima.test.StaticMethod.drawBitmap;
-import static com.isima.test.StaticMethod.drawBitmap;
 import static com.isima.test.StaticMethod.drawBitmapBackground;
 import static com.isima.test.StaticMethod.isButtonClick;
 
 public class MenuScene implements Scene {
 
-    private Bitmap scaledBackground;
+    private final Bitmap scaledBackground;
     private final Bitmap scaledStart;
     private final Bitmap scaledDressing;
     private final Bitmap scaledRewards;
@@ -40,27 +39,6 @@ public class MenuScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-        /*int color ;
-        int A, R, G, B ;
-
-        for (int i = 0 ; i < Constants.SCREEN_WIDTH ; i++)
-        {
-            for (int j = 0 ; j < Constants.SCREEN_HEIGHT ; j++)
-            {
-                color = scaledBackground.getPixel(i,j) ;
-                A = (color >> 24) & 0xff; // or color >>> 24
-                R = (color >> 16) & 0xff;
-                G = (color >>  8) & 0xff;
-                B = (color      ) & 0xff;
-                A = 1;
-                color = (A & 0xff) << 24 | (R & 0xff) << 16 | (G & 0xff) << 8 | (B & 0xff);
-
-                color = 0x00ffff00;
-                scaledBackground.setPixel(i,j,color);
-            }
-        }
-        canvas.drawColor(Color.BLACK);
-        */
         drawBitmapBackground(canvas, scaledBackground);
         drawBitmap(canvas, scaledStart,(float)1/2,(float)1/2 );
         drawBitmap(canvas, scaledDressing, (float)1/3, (float) 4/5);
@@ -69,8 +47,7 @@ public class MenuScene implements Scene {
 
 
 
-    @Override
-    public void terminate() {
+    private void terminate() {
 
         if (goingDressingScene) {
             SceneManager.ACTIVE_SCENE = 4;

@@ -12,12 +12,31 @@ import static com.isima.test.StaticMethod.drawBitmapReturn;
 import static com.isima.test.StaticMethod.isButtonClick;
 
 public class DressingScene implements Scene {
+    /**
+     *
+     */
     private final Bitmap scaledReturnMenu;
+    /**
+     *
+     */
     private final Bitmap scaledBackground;
+    /**
+     *
+     */
     private final Bitmap scaledNextDress ;
+    /**
+     *
+     */
     private final Bitmap scaledPreviousDress ;
+    /**
+     *
+     */
     private final Bitmap[] scaledAlienSprite ;
 
+    /**
+     *
+     * @param context
+     */
     DressingScene(Context context) {
 
         int widthDress = Constants.SCREEN_WIDTH/6 ;
@@ -36,11 +55,18 @@ public class DressingScene implements Scene {
         this.scaledAlienSprite[4] = createPicture(context, R.drawable.aliengreen,  widthDress, heightDress);
     }
 
+    /**
+     *
+     */
     @Override
     public void update() {
 
     }
 
+    /**
+     *
+     * @param canvas
+     */
     @Override
     public void draw(Canvas canvas) {
 
@@ -52,11 +78,17 @@ public class DressingScene implements Scene {
 
     }
 
-    @Override
-    public void terminate() {
+    /**
+     *
+     */
+    private void terminate() {
         SceneManager.ACTIVE_SCENE = 0 ;
     }
 
+    /**
+     *
+     * @param event
+     */
     @Override
     public void recieveTouch(MotionEvent event) {
         if (isButtonClick(event))

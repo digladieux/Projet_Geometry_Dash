@@ -65,5 +65,19 @@ class StaticMethod {
         return (event.getAction() == MotionEvent.ACTION_UP) && (event.getRawX() > 13 * Constants.SCREEN_WIDTH/14) && (event.getRawY() < Constants.SCREEN_WIDTH/14);
     }
 
+   /* static void resetMusic(MediaPlayer music)
+    {
+        music.stop();
+
+        try {
+            music.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        music.seekTo(0);
+    }*/
+
+
+
 
 }

@@ -20,7 +20,6 @@ import static com.isima.test.StaticMethod.isButtonClick;
 
 public class GameScene implements Scene {
 
-    /* Zone pour l'affichage de l'erreur */
     static int mapNumber ;
     private final Bitmap scaledBackground;
     private final Bitmap scaledReturnMenu;
@@ -45,7 +44,10 @@ public class GameScene implements Scene {
     private final MediaPlayer gameOverMusic;
 
 
-
+    /**
+     *
+     * @param context
+     */
     GameScene(Context context)
     {
         mapNumber = 0;
@@ -63,6 +65,9 @@ public class GameScene implements Scene {
 
     }
 
+    /**
+     *
+     */
     private void reset() {
         gamingMusic.start();
         gameOver = false ;
@@ -78,6 +83,11 @@ public class GameScene implements Scene {
 
     }
 
+    /*TODO : possible alleger cette fonction ? */
+
+    /**
+     *
+     */
     @Override
     public void update() {
         if (gameNotStarted)
@@ -85,47 +95,66 @@ public class GameScene implements Scene {
             gameNotStarted = false ;
             reset();
         }
+        else if (win)
+        {
+            this.terminate();
+        } else if ((gameOver))
+        {
+            if (flagGameOverTime)
+            {
+                if (System.currentTimeMillis() - gameOverTime > 1000)
+                {
+                    reset();
+                    flagGameOverTime = false;
+                }
+            } else {
+                flagGameOverTime = true;
+                gameOverTime = System.currentTimeMillis();
+            }
+        }
         else {
-            if ((!gameOver) && (!movingPlayer) && (!win) && (actionDown)) {
+            if (!movingPlayer && actionDown) {
                 movingPlayer = true;
             }
-            if ((!gameOver) && (!win)) {
-                if (movingPlayer) {
-                    player.incrementCurrentSpeed();
-                    playerPoint.y += player.getCurrentSpeed();
-                    if (playerPoint.y > PlayerConstants.INIT_POSITION_Y) {
-                        movingPlayer = false;
-                        player.resetCurrentSpeed();
-                        playerPoint.y = PlayerConstants.INIT_POSITION_Y;
-                    }
+            if (movingPlayer) {
+                player.incrementCurrentSpeed();
+                playerPoint.y += player.getCurrentSpeed();
+                if (playerPoint.y > PlayerConstants.INIT_POSITION_Y) {
+                    movingPlayer = false;
+                    player.resetCurrentSpeed();
+                    playerPoint.y = PlayerConstants.INIT_POSITION_Y;
                 }
+            }
 
-                player.update(playerPoint);
-                obstacleManager.update();
+            player.update(playerPoint);
+            obstacleManager.update();
 
-                if (obstacleManager.playerCollide(player)) {
-                    this.attempt++;
-                    gameOver = true;
-                    gamingMusic.stop();
+            if (obstacleManager.playerCollide(player)) {
+                this.attempt++;
+                gameOver = true;
+                gamingMusic.stop();
 
-                    try {
-                        gamingMusic.prepare();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    gamingMusic.seekTo(0);
-                    gameOverMusic.start();
+                try {
+                    gamingMusic.prepare();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+                gamingMusic.seekTo(0);
+                gameOverMusic.start();
+            }
 
-                if (obstacleManager.size() < 4) {
-                    this.attempt = 0;
-                    win = true;
-                }
+            if (obstacleManager.size() < 4) {
+                this.attempt = 0;
+                win = true;
             }
         }
     }
 
 
+    /**
+     *
+     * @param canvas
+     */
     @Override
     public void draw(Canvas canvas) {
 
@@ -139,35 +168,19 @@ public class GameScene implements Scene {
         paintAttempt.setColor(Color.WHITE);
 
         canvas.drawText(""+this.attempt, Constants.SCREEN_WIDTH/5 + scaledBackgroundAttempt.getWidth()/2 - (int) paintAttempt.measureText(" "+ attempt), Constants.SCREEN_HEIGHT/5, paintAttempt);
-
-        if ((gameOver) || (win))
-        {
-            if (flagGameOverTime)
-            {
-                if (System.currentTimeMillis() - gameOverTime > 1000)
-                {
-                    reset();
-                    flagGameOverTime = false ;
-                }
-                else
-                {
-                    if (gameOver) {
-                        drawBitmap(canvas, scaledBackgroundAttempt,(float)1/2,(float)1/2 );
-                    } else {
-                        this.terminate();
-                    }
-                }
-            }
-            else
-            {
-                flagGameOverTime = true ;
-                gameOverTime = System.currentTimeMillis() ;
-            }
+        if (gameOver) {
+            drawBitmap(canvas, scaledBackgroundAttempt,(float)1/2,(float)1/2 );
         }
     }
 
-    @Override
-    public void terminate() {
+
+    /*TODO : fonction musique peut pas tester sans tel si c'est un pointeur */
+
+    /**
+     *
+     */
+    private void terminate() {
+
 
         gamingMusic.stop();
         gameOverMusic.stop();
@@ -180,11 +193,11 @@ public class GameScene implements Scene {
         }
         gamingMusic.seekTo(0);
         gameOverMusic.seekTo(0);
+        gameNotStarted = true ;
 
         if (changingMap)
         {
             reset();
-            gameNotStarted = true ;
             SceneManager.ACTIVE_SCENE = 1 ;
         }
         else
@@ -193,8 +206,11 @@ public class GameScene implements Scene {
         }
     }
 
+    /**
+     *
+     * @param event
+     */
     @Override
-
     public void recieveTouch(MotionEvent event) {
         if (isButtonClick(event))
         {

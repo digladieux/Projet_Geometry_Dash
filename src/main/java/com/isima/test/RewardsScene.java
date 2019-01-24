@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.view.MotionEvent;
 
 import static com.isima.test.StaticMethod.createPicture;
@@ -19,15 +18,14 @@ public class RewardsScene implements Scene {
     private final Bitmap scaledBackground;
     private final Bitmap scaledTextBackgroundBadge ;
     private final Bitmap[] scaledBadgeAlienSprite ;
-    private int currentBadgeAlienSprite ;
-    private boolean isRewardDisplayed ;
+    private int currentBadgeAlienSprite = 5;
+    private boolean isRewardDisplayed = false ;
 
     RewardsScene(Context context) {
 
         int widthBadge = Constants.SCREEN_WIDTH/8;
         int heightBadge = Constants.SCREEN_HEIGHT/5;
-        isRewardDisplayed = false ;
-        this.currentBadgeAlienSprite = 5 ;
+
         this.scaledBadgeAlienSprite = new Bitmap[5] ;
 
         this.scaledBackground  = createPicture(context, R.drawable.background, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
@@ -53,7 +51,7 @@ public class RewardsScene implements Scene {
 
         if (MapScene.mapAvailable >= 1)
         {
-            drawBitmap(canvas, scaledBadgeAlienSprite[0], (float)1.5/8, (float) 1.5/5); ;
+            drawBitmap(canvas, scaledBadgeAlienSprite[0], (float)1.5/8, (float) 1.5/5);
         }
         if (MapScene.mapAvailable >= 2)
         {
@@ -86,8 +84,7 @@ public class RewardsScene implements Scene {
     }
 
 
-    @Override
-    public void terminate() {
+    private void terminate() {
         currentBadgeAlienSprite = 5 ;
         isRewardDisplayed = false ;
         SceneManager.ACTIVE_SCENE = 0 ;

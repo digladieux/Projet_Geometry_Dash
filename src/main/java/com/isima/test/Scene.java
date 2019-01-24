@@ -9,7 +9,5 @@ interface Scene {
 
     void draw(Canvas canvas);
 
-    void terminate(); /* Changer de scene */
-
     void recieveTouch(MotionEvent event);
 }

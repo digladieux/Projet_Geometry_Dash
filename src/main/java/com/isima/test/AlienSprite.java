@@ -2,7 +2,6 @@ package com.isima.test;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -11,14 +10,36 @@ import static com.isima.test.StaticMethod.createPicture;
 
 class AlienSprite {
 
-    /* Classe de android studio toute faite RECT */
+    /**
+     *
+     */
     private final Rect rectangle;
+    /**
+     *
+     */
     private AnimationManager animationManager;
-    static int currentDress = 0;
+    /**
+     *
+     */
     private final double velocity;
+    /**
+     *
+     */
     private final double initSpeed;
+    /**
+     *
+     */
     private double currentSpeed;
+    /**
+     *
+     */
+    static int currentDress = 0;
 
+    /**
+     *
+     * @param context
+     * @param rectangle
+     */
     AlienSprite(Context context, Rect rectangle)
     {
         this.rectangle = rectangle ;
@@ -29,6 +50,10 @@ class AlienSprite {
         initialisationAnimationSprite(context);
     }
 
+    /**
+     *
+     * @param context
+     */
     private void initialisationAnimationSprite(Context context)
     {
         Bitmap scaledWalkBlue1 = createPicture(context, R.drawable.alienblue_walk1, PlayerConstants.PLAYER_WIDTH, PlayerConstants.PLAYER_HEIGHT);
@@ -85,31 +110,53 @@ class AlienSprite {
                 });
 
     }
+
+    /**
+     *
+     * @return
+     */
     Rect getRectangle() {
         return rectangle;
     }
 
 
+    /**
+     *
+     * @return
+     */
     double getCurrentSpeed() {
         return currentSpeed;
     }
 
 
+    /**
+     *
+     */
     void resetCurrentSpeed()
     {
         this.currentSpeed = this.initSpeed;
     }
 
+    /**
+     *
+     */
     void incrementCurrentSpeed()
     {
         this.currentSpeed += velocity;
     }
 
+    /**
+     *
+     * @param canvas
+     */
     public void draw(Canvas canvas) {
         animationManager.draw(canvas, rectangle);
     }
 
-    /* Classe de android studio toute faite Point */
+    /**
+     *
+     * @param point
+     */
     public void update(Point point)
     {
         float oldTop = rectangle.top; /* est ton aller a gauche ou pas */
@@ -119,6 +166,11 @@ class AlienSprite {
         animationManager.update();
     }
 
+    /**
+     *
+     * @param oldTop
+     * @return
+     */
     private int setState(float oldTop)
     {
         int state ;
@@ -142,6 +194,14 @@ class AlienSprite {
         return state ;
     }
 
+    /**
+     *
+     * @param oldTop
+     * @param walk
+     * @param jump
+     * @param gravity
+     * @return
+     */
     private int giveStateSprite(float oldTop, int walk, int jump, int gravity)
     {
         int state = walk ;

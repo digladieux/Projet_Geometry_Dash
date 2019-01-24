@@ -4,14 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.view.MotionEvent;
 
 import java.io.IOException;
 
 import static com.isima.test.StaticMethod.createPicture;
-import static com.isima.test.StaticMethod.drawBitmap;
 import static com.isima.test.StaticMethod.drawBitmap;
 import static com.isima.test.StaticMethod.drawBitmapBackground;
 import static com.isima.test.StaticMethod.drawBitmapReturn;
@@ -59,7 +57,6 @@ public class MapScene implements Scene {
         }
     }
 
-/*TODO : sous fonction beaucoup de répétition de code */
     @Override
     public void draw(Canvas canvas) {
 
@@ -87,8 +84,7 @@ public class MapScene implements Scene {
 
     }
 
-    @Override
-    public void terminate()
+    private void terminate()
     {
         if (returnMenu) {
             returnMenu = false;
