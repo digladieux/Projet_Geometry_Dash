@@ -6,10 +6,10 @@ class Constants
     static int SCREEN_HEIGHT ;
     static long INIT_TIME ;
 }
-
+/*579003*/
 class PlayerConstants {
-    static final double VELOCITY = (Constants.SCREEN_HEIGHT / 1080) * 1.5;
-    static final double SPEED = (Constants.SCREEN_HEIGHT / 1080) * -50;
+    static final double VELOCITY = (Constants.SCREEN_HEIGHT / 720) * 0.0002;
+    static final double SPEED = (Constants.SCREEN_HEIGHT / 720) * -0.08;
     static final int PLAYER_HEIGHT = (Constants.SCREEN_HEIGHT / 1080) * 186;
     static final int PLAYER_WIDTH = (Constants.SCREEN_WIDTH / 1794) * 132;
     static final int INIT_POSITION_X = (Constants.SCREEN_WIDTH / 1794) * 200;
@@ -37,7 +37,7 @@ class ConstantsGroundObstacle {
     static final int OBSTACLE_WIDTH = (Constants.SCREEN_WIDTH / 1794) * 140;
     //static final int OBSTACLE_RIGHT = OBSTACLE_WIDTH;
     static final int OBSTACLE_TOP = Constants.SCREEN_HEIGHT - OBSTACLE_HEIGHT;
-    static final int OBSTACLE_LEFT = 0;
+    //static final int OBSTACLE_LEFT = 0;
     static final int OBSTACLE_BOTTOM = Constants.SCREEN_HEIGHT;
 
 }
@@ -51,5 +51,17 @@ class ConstantsBatObstacle {
     private static final int OBSTACLE_GAP_TOP = 400;
     static final int OBSTACLE_TOP = OBSTACLE_GAP_TOP;
     static final int OBSTACLE_BOTTOM = OBSTACLE_HEIGHT + OBSTACLE_GAP_TOP;
+
+}
+
+
+class ConstantsFlagArrival {
+
+    static final int OBSTACLE_HEIGHT = (Constants.SCREEN_HEIGHT / 1080) * 639;
+    static final int OBSTACLE_WIDTH = (Constants.SCREEN_WIDTH / 1794) * 150;
+    //static final int OBSTACLE_RIGHT = OBSTACLE_WIDTH;
+    static final int OBSTACLE_TOP = Constants.SCREEN_HEIGHT - ConstantsGroundObstacle.OBSTACLE_HEIGHT - OBSTACLE_HEIGHT;
+    //static final int OBSTACLE_LEFT = 0;
+    static final int OBSTACLE_BOTTOM = Constants.SCREEN_HEIGHT - ConstantsGroundObstacle.OBSTACLE_HEIGHT;
 
 }

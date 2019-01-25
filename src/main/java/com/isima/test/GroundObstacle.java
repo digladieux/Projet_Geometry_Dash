@@ -13,32 +13,36 @@ public class GroundObstacle extends Obstacle {
      *
      * @param idle
      * @param area_left
-     * @param area_right
      */
-    private GroundObstacle(Bitmap idle, int area_left, int area_right)
+    private GroundObstacle(Bitmap idle, int area_left)
     {
-        super(idle, area_left, area_right);
+        super(idle, area_left * ConstantsGroundObstacle.OBSTACLE_WIDTH,area_left * ConstantsGroundObstacle.OBSTACLE_WIDTH + ConstantsGroundObstacle.OBSTACLE_WIDTH, ConstantsGroundObstacle.OBSTACLE_TOP, ConstantsGroundObstacle.OBSTACLE_BOTTOM);
     }
 
     /**
      *
      * @param context
      * @param area_left
-     * @param area_right
      * @return
      */
-    static Obstacle initialisationGroundObstacle(Context context, int area_left, int area_right) {
+    static Obstacle initialisationGroundObstacle(Context context, int area_left) {
        Bitmap scaledIdle = createPicture(context, R.drawable.grass_block, ConstantsGroundObstacle.OBSTACLE_WIDTH, ConstantsGroundObstacle.OBSTACLE_HEIGHT);
-       return new GroundObstacle(scaledIdle, area_left, area_right);
+       return new GroundObstacle(scaledIdle, area_left);
     }
 
     /**
-     *
-     * @param player
-     * @return
+     * Collision entre un joueur et un obstacle
+     * @param player Notre joueur
+     * @return true si collision, false sinon
      */
     @Override
-    public boolean playerCollide(AlienSprite player) {
-        return player.getRectangle().bottom > areaObstacle.top;
+    public int playerCollide(AlienSprite player) {
+        boolean collide = player.getRectangle().bottom > areaObstacle.top;
+        int codeCollision = 0 ;
+        if (collide)
+        {
+            codeCollision = 1 ;
+        }
+        return  codeCollision ;
     }
 }

@@ -11,34 +11,34 @@ import static com.isima.test.StaticMethod.createPicture;
 class AlienSprite {
 
     /**
-     *
+     * Attribut representant la hitbox du personnage (collision) sur lequel on applique les animations
      */
     private final Rect rectangle;
     /**
-     *
+     * Gestionnaire d'animation de l'alien
      */
     private AnimationManager animationManager;
     /**
-     *
+     * Attribut determinant la vitesse du personnage
      */
     private final double velocity;
     /**
-     *
+     * Vitesse initiale du personnage
      */
     private final double initSpeed;
     /**
-     *
+     * Vitesse actuelle du personnage
      */
     private double currentSpeed;
     /**
-     *
+     *  Attribut indiquant quelle apparence aura le joueur
      */
     static int currentDress = 0;
 
     /**
-     *
-     * @param context
-     * @param rectangle
+     * Contructeur du personnage, on initialise tous les attributs a partir des constantes du fichier Constants.java, et on ajoute les animations
+     * @param context Contexte actuel du programme
+     * @param rectangle Zone occupee par le personnage
      */
     AlienSprite(Context context, Rect rectangle)
     {
@@ -51,8 +51,9 @@ class AlienSprite {
     }
 
     /**
-     *
-     * @param context
+     * Fonction initialisant toutes les animations du personnage, pour chacunes des tenues. Chaque tenue possede 2 animations de marche, une de saut et une de collision.
+     * Une fois que toutes les animations sont bien dimensionnees, elles sont creees et integrees a animationManager.
+     * @param context Context actuel du programme
      */
     private void initialisationAnimationSprite(Context context)
     {
@@ -121,8 +122,8 @@ class AlienSprite {
 
 
     /**
-     *
-     * @return
+     * Fonction permettant de recuperer les coordonnees du rectangle du personnage
+     * @return Rectangle representant l'objet
      */
     double getCurrentSpeed() {
         return currentSpeed;

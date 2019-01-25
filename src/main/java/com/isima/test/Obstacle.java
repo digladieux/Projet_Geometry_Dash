@@ -16,16 +16,27 @@ abstract class Obstacle {
         animationManager.playAnim(0);
     }
 
-    Obstacle(Bitmap idle, int area_left, int area_right) {
-        areaObstacle = new Rect(area_left, ConstantsGroundObstacle.OBSTACLE_TOP, area_right, ConstantsGroundObstacle.OBSTACLE_BOTTOM);
+    Obstacle(Bitmap idle, int area_left, int area_right, int areaTop, int areaBottom) {
+        areaObstacle = new Rect(area_left, areaTop, area_right, areaBottom);
         Animation idleGround = new Animation(new Bitmap[]{idle}, 2);
         animationManager = new AnimationManager(new Animation[]{idleGround});
         animationManager.playAnim(0);
     }
 
+    public int playerCollide(AlienSprite player) {
+        boolean collide = areaObstacle.intersect(player.getRectangle());
+        int codeCollision = 0 ;
+        if (this instanceof FlagArrival && collide)
+        {
+            codeCollision = -1 ;
+        }
+        else if (collide)
+        {
+            codeCollision = 1 ;
+        }
 
-    public boolean playerCollide(AlienSprite player) {
-        return areaObstacle.intersect(player.getRectangle());
+        return codeCollision ;
+
     }
 
     void incrementX(float number_pixel_decrement) {

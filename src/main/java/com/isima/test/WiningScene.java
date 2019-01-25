@@ -14,7 +14,7 @@ import static com.isima.test.StaticMethod.drawBitmapBackground;
 
 public class WiningScene implements Scene {
 
-    private final Bitmap scaledBackground;
+    private Bitmap scaledBackground;
     private long winningTime;
     private final Context context ;
     private final MediaPlayer winningMusic;
@@ -23,25 +23,23 @@ public class WiningScene implements Scene {
         this.context = context ;
         winningMusic = MediaPlayer.create(context.getApplicationContext(), R.raw.winningsong);
 
-        if (MapScene.mapAvailable == MapScene.activeMap)
-        {
-            this.scaledBackground  = createPicture(context, R.drawable.background_victory_rewards, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-        }
-        else
-        {
-            this.scaledBackground  = createPicture(context, R.drawable.background_victory, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
-        }
     }
     @Override
     public void update() {
         if (System.currentTimeMillis() - winningTime > 3000)
         {
-            if (MapScene.mapAvailable == MapScene.activeMap)
+            if (MapScene.mapAvailable -1 == MapScene.activeMap)
             {
-                SharedPreferences.Editor edit = context.getSharedPreferences("MapAvailable", Context.MODE_PRIVATE).edit();
+                    this.scaledBackground  = createPicture(context, R.drawable.background_victory_rewards, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
+
                 MapScene.mapAvailable ++ ;
+                SharedPreferences.Editor edit = context.getSharedPreferences("MapAvailable", Context.MODE_PRIVATE).edit();
                 edit.putInt("map", MapScene.mapAvailable) ;
                 edit.apply();
+            }
+            else
+                {
+                this.scaledBackground = createPicture(context, R.drawable.background_victory, Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT);
             }
             winningMusic.start();
             winningTime = System.currentTimeMillis();
@@ -63,12 +61,7 @@ public class WiningScene implements Scene {
 
     @Override
     public void draw(Canvas canvas) {
-
         drawBitmapBackground(canvas, scaledBackground);
-        if (MapScene.mapAvailable == MapScene.activeMap)
-        {
-
-        }
     }
 
     private void terminate() {

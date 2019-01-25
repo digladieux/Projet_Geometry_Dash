@@ -128,8 +128,9 @@ public class GameScene implements Scene {
 
             player.update(playerPoint);
             obstacleManager.update();
+            int codeCollision =  obstacleManager.playerCollide(player) ;
 
-            if (obstacleManager.playerCollide(player)) {
+            if (codeCollision == 1) {
                 this.attempt++;
                 gameOver = true;
                 gamingMusic.stop();
@@ -143,7 +144,7 @@ public class GameScene implements Scene {
                 gameOverMusic.start();
             }
 
-            if (obstacleManager.size() < 4) {
+            else if (codeCollision == -1) {
                 this.attempt = 0;
                 win = true;
             }

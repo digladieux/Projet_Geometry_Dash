@@ -64,20 +64,20 @@ public class MapScene implements Scene {
         drawBitmapBackground(canvas, scaledBackground);
         drawBitmapReturn(canvas, scaledReturnMenu);
 
-        if (mapAvailable >= 0)
+        if (mapAvailable > 0)
         {
             drawBitmap(canvas, scaledButtonMap[0], (float)2.5/9,(float) 1.5/5) ;
         }
-        if (mapAvailable >= 1)
+        if (mapAvailable > 1)
         {
             drawBitmap(canvas, scaledButtonMap[1], (float)6.5/9, (float) 1.5/5) ;
         }
-        if (mapAvailable >= 2)
+        if (mapAvailable > 2)
         {
             drawBitmap(canvas, scaledButtonMap[2], (float)2.5/9,(float) 3.5/5) ;
         }
 
-        if (mapAvailable >= 3)
+        if (mapAvailable > 3)
         {
             drawBitmap(canvas, scaledButtonMap[3], (float)6.5/9,(float) 3.5/5) ;
         }
