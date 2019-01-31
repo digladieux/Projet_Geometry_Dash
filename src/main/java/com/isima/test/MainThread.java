@@ -30,8 +30,8 @@ class MainThread extends Thread {
                     long time = System.currentTimeMillis();
                     while (System.currentTimeMillis() - time < 16.6)
                     {
-                        this.gamePanel.update();
                     }
+                    this.gamePanel.update();
                     this.gamePanel.draw(canvas);
                 }
             } catch (Exception e) {

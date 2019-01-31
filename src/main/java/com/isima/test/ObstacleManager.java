@@ -55,9 +55,9 @@ class ObstacleManager {
         {
             Obstacle ob = it.next();
             if (ob instanceof BatObstacle) {
-                ob.incrementX(speedBat * elapsedTime);
+                ob.incrementX(Constants.SCREEN_WIDTH/120);
             } else {
-                ob.incrementX(speedMonster * elapsedTime);
+                ob.incrementX(Constants.SCREEN_WIDTH/180);
             }
             ob.update();
             if (ob.getRectangle().right <= 0) {

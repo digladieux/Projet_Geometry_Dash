@@ -64,20 +64,20 @@ public class MapScene implements Scene {
         drawBitmapBackground(canvas, scaledBackground);
         drawBitmapReturn(canvas, scaledReturnMenu);
 
-        if (mapAvailable > 0)
+        if (mapAvailable >= 0)
         {
             drawBitmap(canvas, scaledButtonMap[0], (float)2.5/9,(float) 1.5/5) ;
         }
-        if (mapAvailable > 1)
+        if (mapAvailable >= 1)
         {
             drawBitmap(canvas, scaledButtonMap[1], (float)6.5/9, (float) 1.5/5) ;
         }
-        if (mapAvailable > 2)
+        if (mapAvailable >= 2)
         {
             drawBitmap(canvas, scaledButtonMap[2], (float)2.5/9,(float) 3.5/5) ;
         }
 
-        if (mapAvailable > 3)
+        if (mapAvailable >= 3)
         {
             drawBitmap(canvas, scaledButtonMap[3], (float)6.5/9,(float) 3.5/5) ;
         }
@@ -114,19 +114,19 @@ public class MapScene implements Scene {
             this.terminate();
         }
 
-        else if (isButtonClick(event, scaledButtonMap[0], (float) 2.5/9, (float) 1.5/5, 1))
+        else if (isButtonClick(event, scaledButtonMap[0], (float) 2.5/9, (float) 1.5/5, 0))
         {
             changingScene(0);
 
-        } else if (isButtonClick(event, scaledButtonMap[1], (float) 6.5/9, (float) 1.5/5, 2))
+        } else if (isButtonClick(event, scaledButtonMap[1], (float) 6.5/9, (float) 1.5/5, 1))
         {
             changingScene(1);
 
-        } else if (isButtonClick(event, scaledButtonMap[2], (float) 2.5/9, (float) 3.5/5, 3))
+        } else if (isButtonClick(event, scaledButtonMap[2], (float) 2.5/9, (float) 3.5/5, 2))
         {
             changingScene(2);
 
-        } else if (isButtonClick(event, scaledButtonMap[3], (float) 6.5/9, (float) 3.5/5, 4))
+        } else if (isButtonClick(event, scaledButtonMap[3], (float) 6.5/9, (float) 3.5/5, 3))
         {
             changingScene(3);
         }
